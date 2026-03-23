@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { areas } from "@/data/questionnaire";
 import { Answer } from "@/types/diagnostic";
 import { QuestionCard } from "@/components/QuestionCard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Shield, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Shield, ChevronLeft, ChevronRight, CheckCircle2, Wrench } from "lucide-react";
 import { calculateResults } from "@/lib/calculations";
 
 export default function Questionnaire() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAdmin = searchParams.get("admin") === "true";
   const companyName = (location.state as any)?.companyName || "Empresa";
 
   const [step, setStep] = useState(0);
