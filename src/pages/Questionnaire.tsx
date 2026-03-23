@@ -26,6 +26,20 @@ export default function Questionnaire() {
   const currentAreaAnswered = currentArea.questions.filter((q) => answers[q.id]?.grade).length;
   const allCurrentAnswered = currentAreaAnswered === currentArea.questions.length;
 
+  const fillAllAnswers = () => {
+    const filled: Record<string, Answer> = {};
+    areas.forEach((area) => {
+      area.questions.forEach((q) => {
+        filled[q.id] = {
+          questionId: q.id,
+          grade: Math.floor(Math.random() * 5) + 1,
+          observation: "",
+        };
+      });
+    });
+    setAnswers(filled);
+  };
+
   const updateAnswer = (questionId: string, field: "grade" | "observation", value: number | string) => {
     setAnswers((prev) => ({
       ...prev,
