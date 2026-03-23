@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { areas } from "@/data/questionnaire";
 import { Answer } from "@/types/diagnostic";
 import { QuestionCard } from "@/components/QuestionCard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Shield, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Shield, ChevronLeft, ChevronRight, CheckCircle2, Wrench } from "lucide-react";
 import { calculateResults } from "@/lib/calculations";
 
 export default function Questionnaire() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAdmin = searchParams.get("admin") === "true";
   const companyName = (location.state as any)?.companyName || "Empresa";
 
   const [step, setStep] = useState(0);
@@ -23,6 +25,20 @@ export default function Questionnaire() {
 
   const currentAreaAnswered = currentArea.questions.filter((q) => answers[q.id]?.grade).length;
   const allCurrentAnswered = currentAreaAnswered === currentArea.questions.length;
+
+  const fillAllAnswers = () => {
+    const filled: Record<string, Answer> = {};
+    areas.forEach((area) => {
+      area.questions.forEach((q) => {
+        filled[q.id] = {
+          questionId: q.id,
+          grade: Math.floor(Math.random() * 5) + 1,
+          observation: "",
+        };
+      });
+    });
+    setAnswers(filled);
+  };
 
   const updateAnswer = (questionId: string, field: "grade" | "observation", value: number | string) => {
     setAnswers((prev) => ({
@@ -55,6 +71,11 @@ export default function Questionnaire() {
             <span className="text-xs text-muted-foreground font-medium">
               {answeredCount}/{totalQuestions} respondidas
             </span>
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={fillAllAnswers} className="gap-1.5 ml-2 text-xs">
+                <Wrench className="w-3.5 h-3.5" /> Preencher Tudo
+              </Button>
+            )}
           </div>
           <Progress value={progress} className="h-2" />
           <div className="flex gap-1 mt-2">
