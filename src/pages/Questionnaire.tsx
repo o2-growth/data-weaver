@@ -71,6 +71,11 @@ export default function Questionnaire() {
             <span className="text-xs text-muted-foreground font-medium">
               {answeredCount}/{totalQuestions} respondidas
             </span>
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={fillAllAnswers} className="gap-1.5 ml-2 text-xs">
+                <Wrench className="w-3.5 h-3.5" /> Preencher Tudo
+              </Button>
+            )}
           </div>
           <Progress value={progress} className="h-2" />
           <div className="flex gap-1 mt-2">
