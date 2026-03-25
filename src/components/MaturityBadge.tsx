@@ -29,7 +29,7 @@ export function MaturityBadge({ level, label, size = "md", className }: Maturity
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border font-medium",
+        "inline-flex items-center gap-1.5 rounded-full border font-medium transition-colors",
         levelStyles[level] || levelStyles[1],
         sizeStyles[size],
         className

@@ -100,5 +100,219 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Transições suaves em todos os elementos interativos */
+  button, a, input, textarea, select, [role="tab"], [role="radio"] {
+    @apply transition-colors duration-200;
+  }
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Animações Globais */
+/* ──────────────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fade-in-scale 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out forwards;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Stagger de animação para listas de cards */
+.animate-stagger > * {
+  opacity: 0;
+  animation: fade-in 0.4s ease-out forwards;
+}
+.animate-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+
+/* ──────────────────────────────────────────────────────── */
+/* Score ring gradient animation */
+/* ──────────────────────────────────────────────────────── */
+.score-ring {
+  background: conic-gradient(
+    var(--ring-color, hsl(217, 91%, 60%)) var(--ring-percent, 0%),
+    hsl(var(--muted)) var(--ring-percent, 0%)
+  );
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Gauge needle sweep animation */
+/* ──────────────────────────────────────────────────────── */
+@keyframes needle-sweep {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(var(--needle-angle, 0deg));
+  }
+}
+
+.animate-needle {
+  animation: needle-sweep 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: center bottom;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Gauge arc draw animation */
+/* ──────────────────────────────────────────────────────── */
+@keyframes draw-arc {
+  from {
+    stroke-dashoffset: var(--arc-length, 251);
+  }
+  to {
+    stroke-dashoffset: var(--arc-target, 251);
+  }
+}
+
+.animate-arc-draw {
+  animation: draw-arc 1s ease-out forwards;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Section scroll fade-in with IntersectionObserver target */
+/* ──────────────────────────────────────────────────────── */
+.scroll-fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.scroll-fade-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Smooth tab content transition */
+/* ──────────────────────────────────────────────────────── */
+@keyframes tab-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-tab-enter {
+  animation: tab-enter 0.3s ease-out forwards;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Hero gradient background */
+/* ──────────────────────────────────────────────────────── */
+.hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, hsl(var(--primary) / 0.04) 0%, transparent 50%);
+}
+
+.dark .hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, hsl(var(--primary) / 0.06) 0%, transparent 50%);
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* CTA button glow */
+/* ──────────────────────────────────────────────────────── */
+.btn-glow {
+  box-shadow: 0 4px 14px 0 hsl(var(--primary) / 0.25);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 6px 20px 0 hsl(var(--primary) / 0.4);
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Risk distribution bar segments */
+/* ──────────────────────────────────────────────────────── */
+.risk-bar-segment {
+  transition: width 0.6s ease-out, opacity 0.3s ease;
+}
+
+.risk-bar-segment:hover {
+  opacity: 0.85;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Scrollbar customizada */
+/* ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
 }
