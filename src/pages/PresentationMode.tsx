@@ -70,6 +70,8 @@ function getRiskBadgeStyle(category: string): string {
 export default function PresentationMode() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAdmin = searchParams.get("admin") === "true";
   const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Get company name from router state
