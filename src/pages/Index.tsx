@@ -104,9 +104,9 @@ export default function Index() {
 
             <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
               Avalie a maturidade financeira da empresa em{" "}
-              <span className="font-semibold text-foreground">5 áreas estratégicas</span>{" "}
+              <span className="font-semibold text-foreground">6 áreas estratégicas</span>{" "}
               com{" "}
-              <span className="font-semibold text-foreground">48 perguntas especializadas</span>
+              <span className="font-semibold text-foreground">54 perguntas especializadas</span>
             </p>
           </div>
         </section>

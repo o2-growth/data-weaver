@@ -965,7 +965,7 @@ function MethodologyPage({ result }: { result: DiagnosticResult }) {
       <Text style={styles.bodyText}>
         O Diagnostico 360 e uma metodologia proprietaria desenvolvida pela O2
         Inc. para avaliacao abrangente da maturidade financeira empresarial.
-        Atraves de {result.totalQuestions} perguntas distribuidas em 5 areas
+        Atraves de {result.totalQuestions} perguntas distribuidas em 6 areas
         estrategicas, o diagnostico mapeia o nivel de estruturacao dos processos
         financeiros, identifica riscos e oportunidades de melhoria.
       </Text>
