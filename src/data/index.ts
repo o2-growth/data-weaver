@@ -20,3 +20,13 @@ export {
   getRiskClassification,
 } from './maturityScale';
 export type { MaturityLevel, RiskClassification } from './maturityScale';
+
+export { kickoffQuestions } from './kickoffQuestions';
+export type { KickoffQuestion } from './kickoffQuestions';
+
+export {
+  documentsByMaturity,
+  getDocumentsForMaturityLevel,
+  getDocumentsGroupedByLevel,
+} from './documentsByMaturity';
+export type { DocumentByMaturity } from './documentsByMaturity';

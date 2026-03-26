@@ -55,7 +55,7 @@ function getGradeBadgeStyle(grade: number): string {
   return "bg-green-900/20 text-green-400 border-green-500/40";
 }
 
-const RISK_FILTER_OPTIONS = ["Todos", "Alto Crítico", "Alto", "Médio", "Baixo"] as const;
+const RISK_FILTER_OPTIONS = ["Todos", "Alto", "Médio", "Baixo"] as const;
 type RiskFilter = (typeof RISK_FILTER_OPTIONS)[number];
 
 const maturityScale = [
@@ -198,15 +198,14 @@ function ScoreGauge({ score, maturityLevel, maturityLabel }: { score: number; ma
 // ────────────────────────────────────────────────────────────
 
 const RISK_CAT_COLORS: Record<string, string> = {
-  "Alto Crítico": "hsl(0, 72%, 40%)",
-  "Alto": "hsl(25, 95%, 53%)",
+  "Alto": "hsl(0, 72%, 40%)",
   "Médio": "hsl(48, 96%, 53%)",
   "Baixo": "hsl(142, 71%, 45%)",
 };
 
 function RiskDistributionBar({ risks }: { risks: IdentifiedRisk[] }) {
   const counts = useMemo(() => {
-    const map: Record<string, number> = { "Alto Crítico": 0, "Alto": 0, "Médio": 0, "Baixo": 0 };
+    const map: Record<string, number> = { "Alto": 0, "Médio": 0, "Baixo": 0 };
     for (const r of risks) {
       if (map[r.riskCategory] !== undefined) {
         map[r.riskCategory]++;
@@ -218,7 +217,7 @@ function RiskDistributionBar({ risks }: { risks: IdentifiedRisk[] }) {
   const total = risks.length;
   if (total === 0) return null;
 
-  const categories = ["Alto Crítico", "Alto", "Médio", "Baixo"].filter(
+  const categories = ["Alto", "Médio", "Baixo"].filter(
     (cat) => counts[cat] > 0
   );
 

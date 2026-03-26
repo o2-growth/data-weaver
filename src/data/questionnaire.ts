@@ -71,7 +71,7 @@ export const areas: Area[] = [
   },
   {
     id: "planejamento",
-    name: "Planejamento e Inteligência Financeira",
+    name: "Planejamento",
     weight: 0.1,
     questions: [
       { id: "p1", subArea: "Planejamento Estratégico", text: "A empresa possui planejamento estratégico formalizado com metas financeiras?" },

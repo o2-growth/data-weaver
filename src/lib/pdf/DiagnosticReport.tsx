@@ -65,8 +65,7 @@ function getMaturityDescription(level: number): string {
 
 function getRiskCategoryColor(category: string): string {
   const map: Record<string, string> = {
-    "Alto Crítico": COLORS.grade1,
-    "Alto": COLORS.grade2,
+    "Alto": COLORS.grade1,
     "Médio": COLORS.grade3,
     "Baixo": COLORS.grade4,
   };
@@ -764,7 +763,6 @@ function RiskMatrixPages({ result }: { result: DiagnosticResult }) {
   const countByCategory = (cat: string) =>
     relevantRisks.filter((r) => r.riskCategory === cat).length;
 
-  const altoCritico = countByCategory("Alto Crítico");
   const alto = countByCategory("Alto");
   const medio = countByCategory("Médio");
   const baixo = countByCategory("Baixo");
@@ -779,7 +777,6 @@ function RiskMatrixPages({ result }: { result: DiagnosticResult }) {
       <Text style={[styles.bodyText, styles.mb8]}>
         {relevantRisks.length} risco(s) identificado(s) com grau inferior ou
         igual a 3.
-        {altoCritico > 0 && ` ${altoCritico} alto(s) critico(s),`}
         {alto > 0 && ` ${alto} alto(s),`}
         {medio > 0 && ` ${medio} medio(s),`}
         {baixo > 0 && ` ${baixo} baixo(s).`}
@@ -787,7 +784,7 @@ function RiskMatrixPages({ result }: { result: DiagnosticResult }) {
 
       {relevantRisks.map((risk, idx) => {
         const actionItems = risk.actionPlan
-          .split(";")
+          .split("|")
           .map((s) => s.trim())
           .filter(Boolean);
 
@@ -862,7 +859,7 @@ function QuickWinsPages({ result }: { result: DiagnosticResult }) {
 
       {result.quickWins.map((qw, idx) => {
         const actionItems = qw.actionPlan
-          .split(";")
+          .split("|")
           .map((s) => s.trim())
           .filter(Boolean);
 

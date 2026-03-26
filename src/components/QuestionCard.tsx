@@ -35,8 +35,6 @@ function getRiskBadgeStyle(category: string): string {
     case "Médio":
       return "bg-yellow-500/15 text-yellow-700 border-yellow-500/30 dark:text-yellow-400";
     case "Alto":
-      return "bg-orange-500/15 text-orange-700 border-orange-500/30 dark:text-orange-400";
-    case "Alto Crítico":
       return "bg-red-500/15 text-red-700 border-red-500/30 dark:text-red-400";
     default:
       return "bg-muted text-muted-foreground";
@@ -51,8 +49,6 @@ function getRiskBarColor(category: string): string {
     case "Médio":
       return "bg-yellow-500";
     case "Alto":
-      return "bg-orange-500";
-    case "Alto Crítico":
       return "bg-red-500";
     default:
       return "bg-muted-foreground";

@@ -64,8 +64,7 @@ export interface RiskClassification {
 export const riskClassifications: RiskClassification[] = [
   { minScore: 1, maxScore: 2, label: 'Baixo', color: '#22C55E' },
   { minScore: 3, maxScore: 4, label: 'Médio', color: '#EAB308' },
-  { minScore: 5, maxScore: 6, label: 'Alto', color: '#F97316' },
-  { minScore: 7, maxScore: 9, label: 'Alto Crítico', color: '#DC2626' },
+  { minScore: 5, maxScore: 9, label: 'Alto', color: '#F97316' },
 ];
 
 /**

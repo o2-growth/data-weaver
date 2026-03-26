@@ -15,8 +15,7 @@ interface RiskCardProps {
 }
 
 const riskCategoryStyles: Record<string, { bg: string; text: string; border: string; leftBorder: string }> = {
-  "Alto Crítico": { bg: "bg-[hsl(var(--maturity-1)/0.12)]", text: "text-[hsl(var(--maturity-1))]", border: "border-[hsl(var(--maturity-1)/0.3)]", leftBorder: "border-l-[hsl(var(--maturity-1))]" },
-  "Alto": { bg: "bg-[hsl(var(--maturity-2)/0.12)]", text: "text-[hsl(var(--maturity-2))]", border: "border-[hsl(var(--maturity-2)/0.3)]", leftBorder: "border-l-[hsl(var(--maturity-2))]" },
+  "Alto": { bg: "bg-[hsl(var(--maturity-1)/0.12)]", text: "text-[hsl(var(--maturity-1))]", border: "border-[hsl(var(--maturity-1)/0.3)]", leftBorder: "border-l-[hsl(var(--maturity-1))]" },
   "Médio": { bg: "bg-[hsl(var(--maturity-3)/0.12)]", text: "text-[hsl(var(--maturity-3))]", border: "border-[hsl(var(--maturity-3)/0.3)]", leftBorder: "border-l-[hsl(var(--maturity-3))]" },
   "Baixo": { bg: "bg-[hsl(var(--maturity-5)/0.12)]", text: "text-[hsl(var(--maturity-5))]", border: "border-[hsl(var(--maturity-5)/0.3)]", leftBorder: "border-l-[hsl(var(--maturity-5))]" },
 };
@@ -25,7 +24,7 @@ export function RiskCard({ risk, index }: RiskCardProps) {
   const style = riskCategoryStyles[risk.riskCategory] ?? riskCategoryStyles["Baixo"];
 
   const actionItems = risk.actionPlan
-    ? risk.actionPlan.split(";").map((item) => item.trim()).filter(Boolean)
+    ? risk.actionPlan.split("|").map((item) => item.trim()).filter(Boolean)
     : [];
 
   return (
