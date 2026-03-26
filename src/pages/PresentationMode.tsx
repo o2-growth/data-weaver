@@ -324,6 +324,16 @@ export default function PresentationMode() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goToNext, goToPrev, handleGradeSelect, showCompletion, showObservation, currentSlide]);
 
+  // ── Admin auto-fill ─────────────────────────────────────────
+
+  const handleAutoFill = useCallback(() => {
+    if (!isStarted) return;
+    for (const q of questions) {
+      const randomGrade = Math.floor(Math.random() * 5) + 1;
+      answerQuestion(q.id, randomGrade);
+    }
+  }, [isStarted, answerQuestion]);
+
   // ── Complete diagnostic ────────────────────────────────────
 
   const handleComplete = useCallback(() => {
