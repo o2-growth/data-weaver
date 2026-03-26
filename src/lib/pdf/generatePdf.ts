@@ -12,6 +12,6 @@ import type { DiagnosticResult } from "@/types/diagnostic";
  */
 export async function generatePdf(result: DiagnosticResult): Promise<Blob> {
   const document = createElement(DiagnosticReport, { result });
-  const blob = await pdf(document).toBlob();
+  const blob = await pdf(document as any).toBlob();
   return blob;
 }
