@@ -18,6 +18,7 @@ import {
   Trophy,
   BarChart3,
   X,
+  Wrench,
 } from "lucide-react";
 
 // ────────────────────────────────────────────────────────────
