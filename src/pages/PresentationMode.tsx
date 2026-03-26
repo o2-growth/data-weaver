@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDiagnostic } from "@/hooks/useDiagnostic";
 import { areas } from "@/data/areas";
 import { subAreas } from "@/data/subareas";
