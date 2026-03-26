@@ -478,6 +478,19 @@ export default function PresentationMode() {
             </div>
           )}
 
+          {isAdmin && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleAutoFill}
+              className="text-[hsl(215,15%,60%)] hover:text-white hover:bg-[hsl(222,25%,15%)] h-8 px-2 gap-1.5"
+              title="Preencher todas as respostas (Admin)"
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-xs">Preencher</span>
+            </Button>
+          )}
+
           <Button
             variant="ghost"
             size="sm"
