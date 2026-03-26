@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { getMaturityInfo, getMaturityColor } from "@/lib/calculations";
 import { PdfDownloadButton } from "@/components/PdfDownloadButton";
+import { PptxDownloadButton } from "@/components/PptxDownloadButton";
 
 // ────────────────────────────────────────────────────────────
 // Helpers locais
@@ -397,6 +398,7 @@ export default function Results() {
           </div>
           <div className="flex items-center gap-2">
             <PdfDownloadButton result={result} />
+            <PptxDownloadButton result={result} />
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="gap-2">
               <RotateCcw className="w-4 h-4" /> Novo Diagnóstico
             </Button>
