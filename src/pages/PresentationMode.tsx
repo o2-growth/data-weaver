@@ -74,11 +74,12 @@ export default function PresentationMode() {
   const isAdmin = searchParams.get("admin") === "true";
   const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Get company name from router state
+  // Get company name from router state or fallback for admin
   const stateCompanyName =
     (location.state as Record<string, unknown>)?.companyName as
       | string
       | undefined;
+  const companyName = stateCompanyName || (isAdmin ? "Empresa Teste (Admin)" : undefined);
 
   // Diagnostic hook
   const {
@@ -93,17 +94,17 @@ export default function PresentationMode() {
 
   // Start session
   useEffect(() => {
-    if (stateCompanyName && !isStarted) {
-      start(stateCompanyName);
+    if (companyName && !isStarted) {
+      start(companyName);
     }
-  }, [stateCompanyName, isStarted, start]);
+  }, [companyName, isStarted, start]);
 
-  // Redirect if no company name
+  // Redirect if no company name and not admin
   useEffect(() => {
-    if (!stateCompanyName) {
+    if (!companyName) {
       navigate("/", { replace: true });
     }
-  }, [stateCompanyName, navigate]);
+  }, [companyName, navigate]);
 
   // ── Build slide deck ───────────────────────────────────────
 
