@@ -1,6 +1,11 @@
-import { Area } from "@/types/diagnostic";
+interface LegacyArea {
+  id: string;
+  name: string;
+  weight: number;
+  questions: { id: string; subArea: string; text: string }[];
+}
 
-export const areas: Area[] = [
+export const legacyAreas: LegacyArea[] = [
   {
     id: "contabilidade",
     name: "Contabilidade",

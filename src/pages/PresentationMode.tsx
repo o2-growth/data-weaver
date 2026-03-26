@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDiagnostic } from "@/hooks/useDiagnostic";
 import { areas } from "@/data/areas";
 import { subAreas } from "@/data/subareas";
@@ -18,6 +18,7 @@ import {
   Trophy,
   BarChart3,
   X,
+  Wrench,
 } from "lucide-react";
 
 // ────────────────────────────────────────────────────────────
@@ -69,6 +70,8 @@ function getRiskBadgeStyle(category: string): string {
 export default function PresentationMode() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAdmin = searchParams.get("admin") === "true";
   const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Get company name from router state
@@ -321,6 +324,16 @@ export default function PresentationMode() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goToNext, goToPrev, handleGradeSelect, showCompletion, showObservation, currentSlide]);
 
+  // ── Admin auto-fill ─────────────────────────────────────────
+
+  const handleAutoFill = useCallback(() => {
+    if (!isStarted) return;
+    for (const q of questions) {
+      const randomGrade = Math.floor(Math.random() * 5) + 1;
+      answerQuestion(q.id, randomGrade);
+    }
+  }, [isStarted, answerQuestion]);
+
   // ── Complete diagnostic ────────────────────────────────────
 
   const handleComplete = useCallback(() => {
@@ -463,6 +476,19 @@ export default function PresentationMode() {
                 {progress.percentage}%
               </span>
             </div>
+          )}
+
+          {isAdmin && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleAutoFill}
+              className="text-[hsl(215,15%,60%)] hover:text-white hover:bg-[hsl(222,25%,15%)] h-8 px-2 gap-1.5"
+              title="Preencher todas as respostas (Admin)"
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-xs">Preencher</span>
+            </Button>
           )}
 
           <Button
