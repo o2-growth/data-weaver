@@ -1,6 +1,6 @@
 // ============================================================
-// Diagnostico 360 - Gerador de PowerPoint (.pptx)
-// Usa pptxgenjs para gerar apresentacao profissional
+// Diagnostico 360° — Gerador de PowerPoint Executive
+// Design de nível consultoria com gráficos embarcados
 // ============================================================
 
 import PptxGenJS from 'pptxgenjs';
@@ -8,34 +8,35 @@ import type { DiagnosticResult, AreaScore, IdentifiedRisk, QuickWin } from '@/ty
 import { getMaturityInfo } from '@/lib/calculations';
 
 // ────────────────────────────────────────────────────────────
-// Constantes de Design
+// Design System
 // ────────────────────────────────────────────────────────────
 
 const COLORS = {
-  primary: '1B2A4A',
-  accent: '3B82F6',
+  navy: '1E2761',
+  navyLight: '2D3A6A',
+  accent: '2563EB',
+  accentLight: '3B82F6',
   white: 'FFFFFF',
+  offWhite: 'F8FAFC',
   lightGray: 'F1F5F9',
   mediumGray: 'E2E8F0',
+  borderGray: 'CBD5E1',
   darkGray: '64748B',
   text: '1E293B',
-  textLight: '94A3B8',
+  textMuted: '94A3B8',
   grade1: 'DC2626',
   grade2: 'F97316',
   grade3: 'EAB308',
   grade4: '22C55E',
   grade5: '3B82F6',
-  riskAlto: 'DC2626',
-  riskMedio: 'EAB308',
-  riskBaixo: '22C55E',
 } as const;
 
-const FONT = 'Calibri';
+const TITLE_FONT = 'Georgia';
+const BODY_FONT = 'Calibri';
 
-// Slide dimensions for LAYOUT_WIDE (13.33" x 7.5")
 const SLIDE_W = 13.33;
 const SLIDE_H = 7.5;
-const MARGIN_X = 0.6;
+const MARGIN_X = 0.7;
 const CONTENT_W = SLIDE_W - MARGIN_X * 2;
 
 // ────────────────────────────────────────────────────────────
@@ -44,31 +45,27 @@ const CONTENT_W = SLIDE_W - MARGIN_X * 2;
 
 function getGradeColor(level: number): string {
   const map: Record<number, string> = {
-    1: COLORS.grade1,
-    2: COLORS.grade2,
-    3: COLORS.grade3,
-    4: COLORS.grade4,
-    5: COLORS.grade5,
+    1: COLORS.grade1, 2: COLORS.grade2, 3: COLORS.grade3,
+    4: COLORS.grade4, 5: COLORS.grade5,
   };
   return map[level] || COLORS.darkGray;
 }
 
 function getRiskColor(category: string): string {
-  const map: Record<string, string> = {
-    Alto: COLORS.riskAlto,
-    'Médio': COLORS.riskMedio,
-    Baixo: COLORS.riskBaixo,
-  };
-  return map[category] || COLORS.darkGray;
+  if (category === 'Alto') return COLORS.grade1;
+  if (category === 'Médio') return COLORS.grade3;
+  return COLORS.grade4;
+}
+
+function getEffortImpactLabel(value: string): string {
+  const map: Record<string, string> = { baixo: 'Baixo', 'médio': 'Médio', alto: 'Alto' };
+  return map[value] || value;
 }
 
 function getEffortImpactColor(value: string): string {
-  const map: Record<string, string> = {
-    baixo: COLORS.riskBaixo,
-    'médio': COLORS.riskMedio,
-    alto: COLORS.riskAlto,
-  };
-  return map[value] || COLORS.darkGray;
+  if (value === 'alto') return COLORS.grade1;
+  if (value === 'médio') return COLORS.grade3;
+  return COLORS.grade4;
 }
 
 function formatMonthYear(isoDate: string): string {
@@ -77,425 +74,403 @@ function formatMonthYear(isoDate: string): string {
     const month = date.toLocaleDateString('pt-BR', { month: 'long' });
     const year = date.getFullYear();
     return `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
-  } catch {
-    return isoDate;
-  }
+  } catch { return isoDate; }
 }
 
 function formatDate(isoDate: string): string {
   try {
     return new Date(isoDate).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
+      day: '2-digit', month: 'long', year: 'numeric',
     });
-  } catch {
-    return isoDate;
-  }
+  } catch { return isoDate; }
 }
 
-function getMaturityDescription(level: number): string {
-  const descriptions: Record<number, string> = {
-    1: 'A empresa se encontra em estagio critico de maturidade financeira. Processos inexistentes ou altamente informais, com riscos significativos.',
-    2: 'A empresa possui estrutura basica de gestao financeira. Processos iniciais existem, porem pouco formalizados e dependentes de controles manuais.',
-    3: 'Estagio intermediario de maturidade financeira. Processos parcialmente estruturados, com oportunidades claras de evolucao.',
-    4: 'Estrutura gerencial solida. Processos bem definidos, com controles adequados e bom nivel de governanca.',
-    5: 'Nivel estrategico de maturidade financeira. Processos plenamente integrados, com analise preditiva e visao de longo prazo.',
-  };
-  return descriptions[level] || descriptions[1];
-}
-
-/** Adds the thin accent bar at the top of content slides */
-function addTopBar(slide: PptxGenJS.Slide): void {
-  slide.addShape('rect', {
-    x: 0,
-    y: 0,
-    w: SLIDE_W,
-    h: 0.06,
-    fill: { color: COLORS.accent },
-  });
-}
-
-/** Adds slide number at bottom right */
-function addSlideNumber(slide: PptxGenJS.Slide): void {
-  slide.slideNumber = {
-    x: SLIDE_W - 0.8,
-    y: SLIDE_H - 0.4,
-    w: 0.5,
-    fontSize: 9,
-    fontFace: FONT,
-    color: COLORS.darkGray,
-    align: 'right',
-  };
-}
-
-/** Adds a section title bar */
-function addSectionTitle(slide: PptxGenJS.Slide, title: string, y: number): void {
-  slide.addShape('rect', {
-    x: MARGIN_X,
-    y,
-    w: CONTENT_W,
-    h: 0.42,
-    fill: { color: COLORS.primary },
-    rectRadius: 0.05,
-  });
-  slide.addText(title, {
-    x: MARGIN_X + 0.15,
-    y,
-    w: CONTENT_W - 0.3,
-    h: 0.42,
-    fontFace: FONT,
-    fontSize: 13,
-    bold: true,
-    color: COLORS.white,
-    valign: 'middle',
-  });
-}
-
-/** Truncate text to max length */
 function truncate(text: string, max: number): string {
   if (text.length <= max) return text;
   return text.substring(0, max - 3) + '...';
 }
 
+function getMaturityDescription(level: number): string {
+  const d: Record<number, string> = {
+    1: 'A empresa se encontra em estágio crítico de maturidade financeira. Processos inexistentes ou altamente informais, com riscos significativos que demandam ação imediata.',
+    2: 'A empresa possui estrutura básica de gestão financeira. Processos iniciais existem, porém pouco formalizados e dependentes de controles manuais.',
+    3: 'Estágio intermediário de maturidade financeira. Processos parcialmente estruturados, com oportunidades claras de evolução para o próximo nível.',
+    4: 'Estrutura gerencial sólida. Processos bem definidos, com controles adequados e bom nível de governança financeira.',
+    5: 'Nível estratégico de maturidade financeira. Processos plenamente integrados, com análise preditiva e visão de longo prazo.',
+  };
+  return d[level] || d[1];
+}
+
 // ────────────────────────────────────────────────────────────
-// Slide Builders
+// Slide Components (reusable)
+// ────────────────────────────────────────────────────────────
+
+function addContentSlideHeader(slide: PptxGenJS.Slide, title: string, subtitle?: string): void {
+  // Top accent bar
+  slide.addShape('rect', { x: 0, y: 0, w: SLIDE_W, h: 0.06, fill: { color: COLORS.accent } });
+
+  slide.addText(title, {
+    x: MARGIN_X, y: 0.25, w: CONTENT_W * 0.7, h: 0.55,
+    fontFace: TITLE_FONT, fontSize: 26, bold: true, color: COLORS.navy,
+  });
+
+  if (subtitle) {
+    slide.addText(subtitle, {
+      x: MARGIN_X, y: 0.78, w: CONTENT_W, h: 0.28,
+      fontFace: BODY_FONT, fontSize: 11, color: COLORS.darkGray,
+    });
+  }
+
+  // Slide number
+  slide.slideNumber = {
+    x: SLIDE_W - 0.8, y: SLIDE_H - 0.4, w: 0.5,
+    fontSize: 9, fontFace: BODY_FONT, color: COLORS.darkGray, align: 'right',
+  };
+}
+
+function addSectionTitle(slide: PptxGenJS.Slide, title: string, y: number): void {
+  slide.addShape('rect', {
+    x: MARGIN_X, y, w: CONTENT_W, h: 0.40,
+    fill: { color: COLORS.navy }, rectRadius: 0.05,
+  });
+  slide.addText(title, {
+    x: MARGIN_X + 0.15, y, w: CONTENT_W - 0.3, h: 0.40,
+    fontFace: BODY_FONT, fontSize: 12, bold: true, color: COLORS.white, valign: 'middle',
+  });
+}
+
+function addColoredSidebar(slide: PptxGenJS.Slide, color: string): void {
+  slide.addShape('rect', { x: 0, y: 0.06, w: 0.12, h: SLIDE_H - 0.06, fill: { color } });
+}
+
+// ────────────────────────────────────────────────────────────
+// Slide 1: Cover
 // ────────────────────────────────────────────────────────────
 
 function buildCoverSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
   const slide = pptx.addSlide();
-  slide.background = { color: COLORS.primary };
+  slide.background = { color: COLORS.navy };
 
-  // O2 Inc. logo text
+  // O2 Inc branding
   slide.addText('O2 Inc.', {
-    x: MARGIN_X,
-    y: 0.6,
-    w: CONTENT_W,
-    h: 0.6,
-    fontFace: FONT,
-    fontSize: 20,
-    bold: true,
-    color: COLORS.accent,
-    align: 'left',
+    x: MARGIN_X, y: 0.6, w: 4, h: 0.5,
+    fontFace: BODY_FONT, fontSize: 18, bold: true, color: COLORS.accent,
   });
 
-  // Decorative line
-  slide.addShape('rect', {
-    x: MARGIN_X,
-    y: 1.3,
-    w: 2.0,
-    h: 0.04,
-    fill: { color: COLORS.accent },
-  });
+  // Accent line
+  slide.addShape('rect', { x: MARGIN_X, y: 1.25, w: 1.8, h: 0.04, fill: { color: COLORS.accent } });
 
   // Main title
-  slide.addText('Diagnostico 360\u00B0', {
-    x: MARGIN_X,
-    y: 2.0,
-    w: CONTENT_W,
-    h: 1.0,
-    fontFace: FONT,
-    fontSize: 44,
-    bold: true,
-    color: COLORS.white,
-    align: 'left',
+  slide.addText('Diagnóstico 360°', {
+    x: MARGIN_X, y: 2.0, w: CONTENT_W, h: 1.1,
+    fontFace: TITLE_FONT, fontSize: 48, bold: true, color: COLORS.white,
   });
 
   // Subtitle
   slide.addText('Grau de Maturidade Financeira', {
-    x: MARGIN_X,
-    y: 3.0,
-    w: CONTENT_W,
-    h: 0.6,
-    fontFace: FONT,
-    fontSize: 22,
-    color: COLORS.textLight,
-    align: 'left',
+    x: MARGIN_X, y: 3.1, w: CONTENT_W, h: 0.6,
+    fontFace: BODY_FONT, fontSize: 22, color: COLORS.textMuted,
   });
 
   // Company name
   slide.addText(result.companyName, {
-    x: MARGIN_X,
-    y: 3.9,
-    w: CONTENT_W,
-    h: 0.7,
-    fontFace: FONT,
-    fontSize: 28,
-    bold: true,
-    color: COLORS.accent,
-    align: 'left',
+    x: MARGIN_X, y: 4.1, w: CONTENT_W, h: 0.7,
+    fontFace: TITLE_FONT, fontSize: 30, bold: true, color: COLORS.accentLight,
   });
 
-  // Decorative line bottom
-  slide.addShape('rect', {
-    x: MARGIN_X,
-    y: 5.4,
-    w: CONTENT_W,
-    h: 0.01,
-    fill: { color: '2D4A7A' },
-  });
+  // Bottom separator
+  slide.addShape('rect', { x: MARGIN_X, y: 5.5, w: CONTENT_W, h: 0.01, fill: { color: COLORS.navyLight } });
 
   // Date
   slide.addText(formatMonthYear(result.datePerformed), {
-    x: MARGIN_X,
-    y: 5.6,
-    w: CONTENT_W,
-    h: 0.4,
-    fontFace: FONT,
-    fontSize: 14,
-    color: COLORS.textLight,
-    align: 'left',
+    x: MARGIN_X, y: 5.7, w: CONTENT_W / 2, h: 0.4,
+    fontFace: BODY_FONT, fontSize: 14, color: COLORS.textMuted,
   });
 
   // Confidential
   slide.addText('Confidencial', {
-    x: MARGIN_X,
-    y: 6.6,
-    w: CONTENT_W,
-    h: 0.4,
-    fontFace: FONT,
-    fontSize: 10,
-    italic: true,
-    color: COLORS.darkGray,
-    align: 'left',
+    x: MARGIN_X, y: 6.6, w: CONTENT_W, h: 0.4,
+    fontFace: BODY_FONT, fontSize: 10, italic: true, color: COLORS.darkGray,
   });
 }
 
-function buildResultadoGeralSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
+// ────────────────────────────────────────────────────────────
+// Slide 2: Executive Summary (NEW)
+// ────────────────────────────────────────────────────────────
+
+function buildExecutiveSummarySlide(pptx: PptxGenJS, result: DiagnosticResult): void {
   const slide = pptx.addSlide();
-  addTopBar(slide);
-  addSlideNumber(slide);
+  slide.background = { color: COLORS.offWhite };
+  addContentSlideHeader(slide, 'Executive Summary', `${result.companyName} — ${formatDate(result.datePerformed)}`);
 
-  // Title
-  slide.addText('Resultado Geral', {
-    x: MARGIN_X,
-    y: 0.25,
-    w: CONTENT_W,
-    h: 0.55,
-    fontFace: FONT,
-    fontSize: 26,
-    bold: true,
-    color: COLORS.primary,
-  });
-
-  // Subtitle with date
-  slide.addText(`${result.companyName} \u2014 ${formatDate(result.datePerformed)}`, {
-    x: MARGIN_X,
-    y: 0.75,
-    w: CONTENT_W,
-    h: 0.3,
-    fontFace: FONT,
-    fontSize: 11,
-    color: COLORS.darkGray,
-  });
-
-  // ── Left section: Score display ──
-  const scoreBoxX = MARGIN_X;
-  const scoreBoxY = 1.3;
-  const scoreBoxW = 4.0;
-
-  // Score background box
   const gradeColor = getGradeColor(result.maturityLevel);
-  slide.addShape('roundRect', {
-    x: scoreBoxX,
-    y: scoreBoxY,
-    w: scoreBoxW,
-    h: 2.8,
-    fill: { color: COLORS.lightGray },
-    rectRadius: 0.1,
+  const cardY = 1.4;
+  const cardH = 2.6;
+  const cardGap = 0.35;
+  const cardW = (CONTENT_W - cardGap * 2) / 3;
+
+  // ── Card 1: Nota Global ──
+  const c1x = MARGIN_X;
+  slide.addShape('rect', {
+    x: c1x, y: cardY, w: cardW, h: cardH,
+    fill: { color: COLORS.white },
     line: { color: COLORS.mediumGray, pt: 1 },
+    rectRadius: 0.08,
   });
-
-  // Score number
+  slide.addText('NOTA GLOBAL', {
+    x: c1x, y: cardY + 0.2, w: cardW, h: 0.35,
+    fontFace: BODY_FONT, fontSize: 11, bold: true, color: COLORS.darkGray, align: 'center',
+  });
   slide.addText(result.globalScore.toFixed(2), {
-    x: scoreBoxX,
-    y: scoreBoxY + 0.2,
-    w: scoreBoxW,
-    h: 1.2,
-    fontFace: FONT,
-    fontSize: 54,
-    bold: true,
-    color: gradeColor,
-    align: 'center',
+    x: c1x, y: cardY + 0.6, w: cardW, h: 1.1,
+    fontFace: TITLE_FONT, fontSize: 54, bold: true, color: gradeColor, align: 'center',
   });
-
-  // "de 5.00"
   slide.addText('de 5.00', {
-    x: scoreBoxX,
-    y: scoreBoxY + 1.2,
-    w: scoreBoxW,
-    h: 0.3,
-    fontFace: FONT,
-    fontSize: 12,
-    color: COLORS.darkGray,
-    align: 'center',
+    x: c1x, y: cardY + 1.6, w: cardW, h: 0.3,
+    fontFace: BODY_FONT, fontSize: 12, color: COLORS.darkGray, align: 'center',
+  });
+  // Progress bar
+  const barW = cardW * 0.6;
+  const barX = c1x + (cardW - barW) / 2;
+  slide.addShape('rect', {
+    x: barX, y: cardY + 2.0, w: barW, h: 0.12,
+    fill: { color: COLORS.mediumGray }, rectRadius: 0.06,
+  });
+  slide.addShape('rect', {
+    x: barX, y: cardY + 2.0, w: barW * (result.globalScore / 5), h: 0.12,
+    fill: { color: gradeColor }, rectRadius: 0.06,
   });
 
+  // ── Card 2: Nível de Maturidade ──
+  const c2x = MARGIN_X + cardW + cardGap;
+  slide.addShape('rect', {
+    x: c2x, y: cardY, w: cardW, h: cardH,
+    fill: { color: COLORS.white },
+    line: { color: COLORS.mediumGray, pt: 1 },
+    rectRadius: 0.08,
+  });
+  slide.addText('NÍVEL DE MATURIDADE', {
+    x: c2x, y: cardY + 0.2, w: cardW, h: 0.35,
+    fontFace: BODY_FONT, fontSize: 11, bold: true, color: COLORS.darkGray, align: 'center',
+  });
+  slide.addText(`Grau ${result.maturityLevel}`, {
+    x: c2x, y: cardY + 0.7, w: cardW, h: 0.8,
+    fontFace: TITLE_FONT, fontSize: 40, bold: true, color: gradeColor, align: 'center',
+  });
   // Maturity badge
-  slide.addShape('roundRect', {
-    x: scoreBoxX + scoreBoxW / 2 - 1.2,
-    y: scoreBoxY + 1.65,
-    w: 2.4,
-    h: 0.38,
-    fill: { color: gradeColor },
-    rectRadius: 0.19,
+  const badgeW = 2.8;
+  const badgeX = c2x + (cardW - badgeW) / 2;
+  slide.addShape('rect', {
+    x: badgeX, y: cardY + 1.55, w: badgeW, h: 0.4,
+    fill: { color: gradeColor }, rectRadius: 0.2,
   });
   slide.addText(result.maturityLabel, {
-    x: scoreBoxX + scoreBoxW / 2 - 1.2,
-    y: scoreBoxY + 1.65,
-    w: 2.4,
-    h: 0.38,
-    fontFace: FONT,
-    fontSize: 13,
-    bold: true,
-    color: COLORS.white,
-    align: 'center',
-    valign: 'middle',
+    x: badgeX, y: cardY + 1.55, w: badgeW, h: 0.4,
+    fontFace: BODY_FONT, fontSize: 14, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
   });
 
-  // Grau level
-  slide.addText(`Grau ${result.maturityLevel}`, {
-    x: scoreBoxX,
-    y: scoreBoxY + 2.15,
-    w: scoreBoxW,
-    h: 0.35,
-    fontFace: FONT,
-    fontSize: 11,
-    color: COLORS.darkGray,
-    align: 'center',
+  // ── Card 3: Principal Risco ──
+  const c3x = MARGIN_X + (cardW + cardGap) * 2;
+  const topRisk = result.identifiedRisks[0];
+  slide.addShape('rect', {
+    x: c3x, y: cardY, w: cardW, h: cardH,
+    fill: { color: COLORS.white },
+    line: { color: COLORS.mediumGray, pt: 1 },
+    rectRadius: 0.08,
+  });
+  slide.addText('PRINCIPAL RISCO', {
+    x: c3x, y: cardY + 0.2, w: cardW, h: 0.35,
+    fontFace: BODY_FONT, fontSize: 11, bold: true, color: COLORS.darkGray, align: 'center',
+  });
+  if (topRisk) {
+    // Risk score
+    slide.addText(`${topRisk.riskScore}`, {
+      x: c3x, y: cardY + 0.6, w: cardW, h: 0.9,
+      fontFace: TITLE_FONT, fontSize: 44, bold: true, color: COLORS.grade1, align: 'center',
+    });
+    slide.addText(`Score de Risco`, {
+      x: c3x, y: cardY + 1.4, w: cardW, h: 0.3,
+      fontFace: BODY_FONT, fontSize: 10, color: COLORS.darkGray, align: 'center',
+    });
+    slide.addText(truncate(topRisk.areaName + ': ' + topRisk.riskNarrative, 100), {
+      x: c3x + 0.2, y: cardY + 1.8, w: cardW - 0.4, h: 0.6,
+      fontFace: BODY_FONT, fontSize: 9, color: COLORS.text, align: 'center',
+    });
+  } else {
+    slide.addText('Nenhum risco\ncrítico identificado', {
+      x: c3x, y: cardY + 0.8, w: cardW, h: 1.0,
+      fontFace: BODY_FONT, fontSize: 14, color: COLORS.grade4, align: 'center',
+    });
+  }
+
+  // ── Bottom: Interpretation ──
+  const descY = 4.4;
+  slide.addShape('rect', {
+    x: MARGIN_X, y: descY, w: CONTENT_W, h: 0.9,
+    fill: { color: COLORS.white },
+    line: { color: COLORS.mediumGray, pt: 0.5 },
+    rectRadius: 0.08,
+  });
+  // Colored left accent on interpretation box
+  slide.addShape('rect', {
+    x: MARGIN_X, y: descY, w: 0.08, h: 0.9,
+    fill: { color: gradeColor },
+  });
+  slide.addText(getMaturityDescription(result.maturityLevel), {
+    x: MARGIN_X + 0.25, y: descY + 0.05, w: CONTENT_W - 0.5, h: 0.8,
+    fontFace: BODY_FONT, fontSize: 12, color: COLORS.text, valign: 'middle',
   });
 
-  // ── Right section: Areas table ──
-  const tableX = scoreBoxX + scoreBoxW + 0.4;
-  const tableW = CONTENT_W - scoreBoxW - 0.4;
+  // Stats bar
+  slide.addText(
+    `${result.answeredQuestions}/${result.totalQuestions} perguntas  |  ${result.identifiedRisks.length} risco(s)  |  ${result.quickWins.length} quick win(s)`,
+    {
+      x: MARGIN_X, y: 5.7, w: CONTENT_W, h: 0.3,
+      fontFace: BODY_FONT, fontSize: 10, color: COLORS.darkGray, align: 'center',
+    }
+  );
+}
 
+// ────────────────────────────────────────────────────────────
+// Slide 3: Resultado Geral com Charts
+// ────────────────────────────────────────────────────────────
+
+function buildResultadoGeralSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
+  const slide = pptx.addSlide();
+  slide.background = { color: COLORS.offWhite };
+  addContentSlideHeader(slide, 'Resultado por Área');
+
+  // ── Left: Radar Chart ──
+  const radarData = [{
+    name: 'Nota',
+    labels: result.areaScores.map(a => a.areaName),
+    values: result.areaScores.map(a => a.score),
+  }];
+
+  slide.addChart((pptx as any).charts.RADAR, radarData, {
+    x: MARGIN_X, y: 1.2, w: 5.5, h: 4.8,
+    radarStyle: 'filled',
+    chartColors: [COLORS.accent],
+    catAxisLabelColor: COLORS.text,
+    catAxisLabelFontSize: 10,
+    catAxisLabelFontFace: BODY_FONT,
+    valAxisMaxVal: 5,
+    valAxisMinVal: 0,
+    valGridLine: { color: COLORS.mediumGray, size: 0.5 },
+    showLegend: false,
+    chartArea: { fill: { color: COLORS.offWhite }, roundedCorners: true },
+  } as any);
+
+  // ── Right: Bar Chart horizontal ──
+  const barData = [{
+    name: 'Nota',
+    labels: result.areaScores.map(a => a.areaName),
+    values: result.areaScores.map(a => a.score),
+  }];
+
+  const barColors = result.areaScores.map(a => getGradeColor(a.maturityLevel));
+
+  slide.addChart((pptx as any).charts.BAR, barData, {
+    x: 6.5, y: 1.2, w: 6.1, h: 4.8,
+    barDir: 'bar',
+    chartColors: barColors,
+    catAxisLabelColor: COLORS.text,
+    catAxisLabelFontSize: 10,
+    catAxisLabelFontFace: BODY_FONT,
+    valAxisLabelColor: COLORS.darkGray,
+    valAxisMaxVal: 5,
+    valAxisMinVal: 0,
+    valGridLine: { color: COLORS.mediumGray, size: 0.5 },
+    catGridLine: { style: 'none' },
+    showValue: true,
+    dataLabelPosition: 'outEnd',
+    dataLabelColor: COLORS.text,
+    showLegend: false,
+    chartArea: { fill: { color: COLORS.offWhite }, roundedCorners: true },
+  } as any);
+
+  // ── Bottom: Areas table (compact) ──
+  const tableY = 6.2;
   const headerRow: PptxGenJS.TableCell[] = [
-    { text: 'Area', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 10, align: 'left', valign: 'middle' } },
-    { text: 'Peso', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 10, align: 'center', valign: 'middle' } },
-    { text: 'Nota', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 10, align: 'center', valign: 'middle' } },
-    { text: 'Grau', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 10, align: 'center', valign: 'middle' } },
+    { text: 'Área', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'left', valign: 'middle' } },
+    { text: 'Peso', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle' } },
+    { text: 'Nota', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle' } },
+    { text: 'Maturidade', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle' } },
   ];
 
   const dataRows: PptxGenJS.TableRow[] = result.areaScores.map((area, idx) => {
     const bg = idx % 2 === 0 ? COLORS.white : COLORS.lightGray;
-    const areaGradeColor = getGradeColor(area.maturityLevel);
+    const c = getGradeColor(area.maturityLevel);
     return [
-      { text: area.areaName, options: { fill: { color: bg }, fontFace: FONT, fontSize: 10, align: 'left', valign: 'middle' } },
-      { text: `${(area.weight * 100).toFixed(0)}%`, options: { fill: { color: bg }, fontFace: FONT, fontSize: 10, align: 'center', valign: 'middle' } },
-      { text: area.score.toFixed(2), options: { fill: { color: bg }, fontFace: FONT, fontSize: 10, bold: true, align: 'center', valign: 'middle', color: areaGradeColor } },
-      { text: area.maturityLabel, options: { fill: { color: bg }, fontFace: FONT, fontSize: 9, align: 'center', valign: 'middle', color: areaGradeColor } },
+      { text: area.areaName, options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, align: 'left', valign: 'middle' } },
+      { text: `${(area.weight * 100).toFixed(0)}%`, options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle' } },
+      { text: area.score.toFixed(2), options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, bold: true, align: 'center', valign: 'middle', color: c } },
+      { text: `Grau ${area.maturityLevel} — ${area.maturityLabel}`, options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle', color: c } },
     ];
   });
 
   slide.addTable([headerRow, ...dataRows], {
-    x: tableX,
-    y: scoreBoxY,
-    w: tableW,
-    colW: [tableW * 0.35, tableW * 0.15, tableW * 0.2, tableW * 0.3],
-    rowH: 0.38,
+    x: MARGIN_X, y: tableY, w: CONTENT_W,
+    colW: [CONTENT_W * 0.3, CONTENT_W * 0.12, CONTENT_W * 0.15, CONTENT_W * 0.43],
+    rowH: 0.18,
     border: { type: 'solid', pt: 0.5, color: COLORS.mediumGray },
-    margin: [3, 5, 3, 5],
-  });
-
-  // ── Bottom: Interpretation ──
-  const descY = 4.5;
-  slide.addShape('roundRect', {
-    x: MARGIN_X,
-    y: descY,
-    w: CONTENT_W,
-    h: 0.85,
-    fill: { color: COLORS.lightGray },
-    rectRadius: 0.08,
-    line: { color: COLORS.mediumGray, pt: 0.5 },
-  });
-  slide.addText(getMaturityDescription(result.maturityLevel), {
-    x: MARGIN_X + 0.2,
-    y: descY + 0.05,
-    w: CONTENT_W - 0.4,
-    h: 0.75,
-    fontFace: FONT,
-    fontSize: 11,
-    color: COLORS.text,
-    valign: 'middle',
-  });
-
-  // Stats at bottom
-  slide.addText(`${result.answeredQuestions}/${result.totalQuestions} perguntas respondidas  |  ${result.identifiedRisks.length} risco(s) identificado(s)  |  ${result.quickWins.length} quick win(s)`, {
-    x: MARGIN_X,
-    y: 5.6,
-    w: CONTENT_W,
-    h: 0.3,
-    fontFace: FONT,
-    fontSize: 9,
-    color: COLORS.darkGray,
-    align: 'center',
+    margin: [2, 4, 2, 4],
   });
 }
 
+// ────────────────────────────────────────────────────────────
+// Area Slides (with colored sidebar)
+// ────────────────────────────────────────────────────────────
+
 function buildAreaSlide(pptx: PptxGenJS, result: DiagnosticResult, area: AreaScore): void {
   const areaRisks = result.identifiedRisks
-    .filter((r) => r.areaName === area.areaName)
+    .filter(r => r.areaName === area.areaName)
     .sort((a, b) => b.riskScore - a.riskScore);
 
   const slide = pptx.addSlide();
-  addTopBar(slide);
-  addSlideNumber(slide);
-
-  // ── Header: Area name + weight + score badge ──
+  slide.background = { color: COLORS.offWhite };
   const gradeColor = getGradeColor(area.maturityLevel);
 
+  // Colored sidebar
+  addColoredSidebar(slide, gradeColor);
+
+  // Top accent bar
+  slide.addShape('rect', { x: 0, y: 0, w: SLIDE_W, h: 0.06, fill: { color: COLORS.accent } });
+  slide.slideNumber = {
+    x: SLIDE_W - 0.8, y: SLIDE_H - 0.4, w: 0.5,
+    fontSize: 9, fontFace: BODY_FONT, color: COLORS.darkGray, align: 'right',
+  };
+
+  // Area name
   slide.addText(area.areaName, {
-    x: MARGIN_X,
-    y: 0.2,
-    w: 6,
-    h: 0.5,
-    fontFace: FONT,
-    fontSize: 24,
-    bold: true,
-    color: COLORS.primary,
+    x: MARGIN_X + 0.3, y: 0.2, w: 7, h: 0.55,
+    fontFace: TITLE_FONT, fontSize: 24, bold: true, color: COLORS.navy,
   });
 
-  // Weight badge
+  // Weight
   slide.addText(`Peso: ${(area.weight * 100).toFixed(0)}%`, {
-    x: MARGIN_X,
-    y: 0.7,
-    w: 2,
-    h: 0.3,
-    fontFace: FONT,
-    fontSize: 10,
-    color: COLORS.darkGray,
+    x: MARGIN_X + 0.3, y: 0.72, w: 2, h: 0.25,
+    fontFace: BODY_FONT, fontSize: 10, color: COLORS.darkGray,
   });
 
-  // Score badge (right side of header)
-  slide.addShape('roundRect', {
-    x: SLIDE_W - MARGIN_X - 3.0,
-    y: 0.2,
-    w: 3.0,
-    h: 0.55,
-    fill: { color: gradeColor },
-    rectRadius: 0.08,
+  // Score badge
+  slide.addShape('rect', {
+    x: SLIDE_W - MARGIN_X - 3.2, y: 0.2, w: 3.2, h: 0.55,
+    fill: { color: gradeColor }, rectRadius: 0.08,
   });
-  slide.addText(`${area.score.toFixed(2)}  \u2014  ${area.maturityLabel}`, {
-    x: SLIDE_W - MARGIN_X - 3.0,
-    y: 0.2,
-    w: 3.0,
-    h: 0.55,
-    fontFace: FONT,
-    fontSize: 14,
-    bold: true,
-    color: COLORS.white,
-    align: 'center',
-    valign: 'middle',
+  slide.addText(`${area.score.toFixed(2)}  —  ${area.maturityLabel}`, {
+    x: SLIDE_W - MARGIN_X - 3.2, y: 0.2, w: 3.2, h: 0.55,
+    fontFace: BODY_FONT, fontSize: 14, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
   });
 
-  // ── Subareas table ──
   let currentY = 1.15;
 
+  // ── Subareas table ──
   if (area.subAreaScores.length > 0) {
     const subHeaderRow: PptxGenJS.TableCell[] = [
-      { text: 'SubArea', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 9, align: 'left', valign: 'middle' } },
-      { text: 'Nota', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 9, align: 'center', valign: 'middle' } },
-      { text: 'Grau', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 9, align: 'center', valign: 'middle' } },
+      { text: 'Subárea', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'left', valign: 'middle' } },
+      { text: 'Nota', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle' } },
+      { text: 'Maturidade', options: { bold: true, fill: { color: COLORS.navy }, color: COLORS.white, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle' } },
     ];
 
     const subDataRows: PptxGenJS.TableRow[] = area.subAreaScores.map((sub, idx) => {
@@ -503,32 +478,29 @@ function buildAreaSlide(pptx: PptxGenJS, result: DiagnosticResult, area: AreaSco
       const subInfo = getMaturityInfo(sub.score);
       const subColor = getGradeColor(subInfo.level);
       return [
-        { text: sub.subAreaName, options: { fill: { color: bg }, fontFace: FONT, fontSize: 9, align: 'left', valign: 'middle' } },
-        { text: sub.score.toFixed(2), options: { fill: { color: bg }, fontFace: FONT, fontSize: 9, bold: true, align: 'center', valign: 'middle', color: subColor } },
-        { text: subInfo.label, options: { fill: { color: bg }, fontFace: FONT, fontSize: 9, align: 'center', valign: 'middle', color: subColor } },
+        { text: sub.subAreaName, options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, align: 'left', valign: 'middle' } },
+        { text: sub.score.toFixed(2), options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, bold: true, align: 'center', valign: 'middle', color: subColor } },
+        { text: subInfo.label, options: { fill: { color: bg }, fontFace: BODY_FONT, fontSize: 9, align: 'center', valign: 'middle', color: subColor } },
       ];
     });
 
     const subTableW = 5.5;
     slide.addTable([subHeaderRow, ...subDataRows], {
-      x: MARGIN_X,
-      y: currentY,
-      w: subTableW,
+      x: MARGIN_X + 0.3, y: currentY, w: subTableW,
       colW: [subTableW * 0.55, subTableW * 0.2, subTableW * 0.25],
       rowH: 0.3,
       border: { type: 'solid', pt: 0.5, color: COLORS.mediumGray },
       margin: [2, 4, 2, 4],
     });
 
-    currentY += 0.3 * (area.subAreaScores.length + 1) + 0.2;
+    currentY += 0.3 * (area.subAreaScores.length + 1) + 0.25;
   }
 
-  // ── Risks section ──
+  // ── Risks ──
   if (areaRisks.length > 0) {
     addSectionTitle(slide, `Riscos Identificados (${areaRisks.length})`, currentY);
-    currentY += 0.55;
+    currentY += 0.5;
 
-    // Group risks by subarea
     const risksBySubArea: Record<string, IdentifiedRisk[]> = {};
     for (const risk of areaRisks) {
       const key = risk.subAreaName || 'Geral';
@@ -536,117 +508,81 @@ function buildAreaSlide(pptx: PptxGenJS, result: DiagnosticResult, area: AreaSco
       risksBySubArea[key].push(risk);
     }
 
-    // Determine font size based on content volume
     const totalRisks = areaRisks.length;
     const riskFontSize = totalRisks > 4 ? 8 : totalRisks > 2 ? 9 : 10;
     const lineH = totalRisks > 4 ? 0.22 : 0.26;
 
     for (const [subAreaName, risks] of Object.entries(risksBySubArea)) {
-      if (currentY > 6.5) break; // Prevent overflow
+      if (currentY > 6.5) break;
 
-      // SubArea name header
       slide.addText(subAreaName, {
-        x: MARGIN_X + 0.1,
-        y: currentY,
-        w: CONTENT_W - 0.2,
-        h: lineH,
-        fontFace: FONT,
-        fontSize: riskFontSize + 1,
-        bold: true,
-        color: COLORS.primary,
+        x: MARGIN_X + 0.3, y: currentY, w: CONTENT_W - 0.5, h: lineH,
+        fontFace: BODY_FONT, fontSize: riskFontSize + 1, bold: true, color: COLORS.navy,
       });
       currentY += lineH;
 
       for (const risk of risks) {
         if (currentY > 6.5) break;
 
-        // Risk category badge + narrative
         const riskColor = getRiskColor(risk.riskCategory);
         const badgeW = 0.55;
 
-        slide.addShape('roundRect', {
-          x: MARGIN_X + 0.15,
-          y: currentY + 0.02,
-          w: badgeW,
-          h: lineH - 0.04,
-          fill: { color: riskColor },
-          rectRadius: 0.04,
+        slide.addShape('rect', {
+          x: MARGIN_X + 0.35, y: currentY + 0.02, w: badgeW, h: lineH - 0.04,
+          fill: { color: riskColor }, rectRadius: 0.04,
         });
         slide.addText(risk.riskCategory, {
-          x: MARGIN_X + 0.15,
-          y: currentY + 0.02,
-          w: badgeW,
-          h: lineH - 0.04,
-          fontFace: FONT,
-          fontSize: 7,
-          bold: true,
-          color: COLORS.white,
-          align: 'center',
-          valign: 'middle',
+          x: MARGIN_X + 0.35, y: currentY + 0.02, w: badgeW, h: lineH - 0.04,
+          fontFace: BODY_FONT, fontSize: 7, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
         });
 
-        // Narrative text (truncated if needed)
-        const maxNarrativeLen = totalRisks > 4 ? 120 : 180;
-        slide.addText(truncate(risk.riskNarrative, maxNarrativeLen), {
-          x: MARGIN_X + 0.15 + badgeW + 0.1,
-          y: currentY,
-          w: CONTENT_W - badgeW - 0.4,
-          h: lineH,
-          fontFace: FONT,
-          fontSize: riskFontSize,
-          color: COLORS.text,
-          valign: 'middle',
+        const maxLen = totalRisks > 4 ? 120 : 180;
+        slide.addText(truncate(risk.riskNarrative, maxLen), {
+          x: MARGIN_X + 0.35 + badgeW + 0.1, y: currentY, w: CONTENT_W - badgeW - 0.8, h: lineH,
+          fontFace: BODY_FONT, fontSize: riskFontSize, color: COLORS.text, valign: 'middle',
         });
         currentY += lineH;
       }
       currentY += 0.05;
     }
-
     currentY += 0.1;
   }
 
-  // ── Controls section ──
-  const controlsForArea = areaRisks.filter((r) => r.controls && r.controls.trim().length > 0);
+  // ── Controls ──
+  const controlsForArea = areaRisks.filter(r => r.controls?.trim().length > 0);
   if (controlsForArea.length > 0 && currentY < 6.0) {
     addSectionTitle(slide, 'Controles Recomendados', currentY);
     currentY += 0.5;
 
-    // Deduplicate controls
-    const uniqueControls = [...new Set(controlsForArea.map((r) => r.controls.trim()))];
+    const uniqueControls = [...new Set(controlsForArea.map(r => r.controls.trim()))];
     const ctrlFontSize = uniqueControls.length > 4 ? 8 : 9;
     const ctrlLineH = uniqueControls.length > 4 ? 0.22 : 0.26;
 
     for (const ctrl of uniqueControls) {
       if (currentY > 6.5) break;
-      slide.addText(`\u2022  ${truncate(ctrl, 150)}`, {
-        x: MARGIN_X + 0.15,
-        y: currentY,
-        w: CONTENT_W - 0.3,
-        h: ctrlLineH,
-        fontFace: FONT,
-        fontSize: ctrlFontSize,
-        color: COLORS.text,
-        valign: 'middle',
+      slide.addText([
+        { text: '•  ', options: { bold: true, color: COLORS.accent } },
+        { text: truncate(ctrl, 150) },
+      ], {
+        x: MARGIN_X + 0.35, y: currentY, w: CONTENT_W - 0.7, h: ctrlLineH,
+        fontFace: BODY_FONT, fontSize: ctrlFontSize, color: COLORS.text, valign: 'middle',
       });
       currentY += ctrlLineH;
     }
     currentY += 0.1;
   }
 
-  // ── Action Plan section ──
-  const actionsForArea = areaRisks.filter((r) => r.actionPlan && r.actionPlan.trim().length > 0);
+  // ── Action Plan ──
+  const actionsForArea = areaRisks.filter(r => r.actionPlan?.trim().length > 0);
   if (actionsForArea.length > 0 && currentY < 5.8) {
-    addSectionTitle(slide, 'Plano de Acao', currentY);
+    addSectionTitle(slide, 'Plano de Ação', currentY);
     currentY += 0.5;
 
-    // Collect unique action items, split by "|"
     const allActions: string[] = [];
     for (const risk of actionsForArea) {
-      const items = risk.actionPlan.split('|').map((s) => s.trim()).filter(Boolean);
+      const items = risk.actionPlan.split('|').map(s => s.trim()).filter(Boolean);
       for (const item of items) {
-        if (!allActions.includes(item)) {
-          allActions.push(item);
-        }
+        if (!allActions.includes(item)) allActions.push(item);
       }
     }
 
@@ -656,193 +592,223 @@ function buildAreaSlide(pptx: PptxGenJS, result: DiagnosticResult, area: AreaSco
     for (let i = 0; i < allActions.length; i++) {
       if (currentY > 6.8) break;
       slide.addText(`${i + 1}. ${truncate(allActions[i], 140)}`, {
-        x: MARGIN_X + 0.15,
-        y: currentY,
-        w: CONTENT_W - 0.3,
-        h: actionLineH,
-        fontFace: FONT,
-        fontSize: actionFontSize,
-        color: COLORS.text,
-        valign: 'middle',
+        x: MARGIN_X + 0.35, y: currentY, w: CONTENT_W - 0.7, h: actionLineH,
+        fontFace: BODY_FONT, fontSize: actionFontSize, color: COLORS.text, valign: 'middle',
       });
       currentY += actionLineH;
     }
   }
 }
 
-function buildQuickWinsSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
-  const slide = pptx.addSlide();
-  addTopBar(slide);
-  addSlideNumber(slide);
+// ────────────────────────────────────────────────────────────
+// Quick Wins (paginated cards, max 5 per slide)
+// ────────────────────────────────────────────────────────────
 
-  slide.addText('Oportunidades de Melhoria Rapida (Quick Wins)', {
-    x: MARGIN_X,
-    y: 0.25,
-    w: CONTENT_W,
-    h: 0.55,
-    fontFace: FONT,
-    fontSize: 24,
-    bold: true,
-    color: COLORS.primary,
-  });
-
-  const wins = result.quickWins.slice(0, 10);
+function buildQuickWinsSlides(pptx: PptxGenJS, result: DiagnosticResult): void {
+  const wins = result.quickWins;
+  const ITEMS_PER_SLIDE = 5;
 
   if (wins.length === 0) {
-    slide.addText('Nenhum quick win identificado \u2014 a empresa nao possui areas com maturidade critica e risco alto simultaneo.', {
-      x: MARGIN_X,
-      y: 2.5,
-      w: CONTENT_W,
-      h: 0.5,
-      fontFace: FONT,
-      fontSize: 12,
-      color: COLORS.darkGray,
-      align: 'center',
+    const slide = pptx.addSlide();
+    slide.background = { color: COLORS.offWhite };
+    addContentSlideHeader(slide, 'Quick Wins');
+    slide.addText('Nenhum quick win identificado — a empresa não possui áreas com maturidade crítica e risco alto simultâneo.', {
+      x: MARGIN_X, y: 2.5, w: CONTENT_W, h: 0.5,
+      fontFace: BODY_FONT, fontSize: 13, color: COLORS.darkGray, align: 'center',
     });
     return;
   }
 
-  // Table header
-  const headerRow: PptxGenJS.TableCell[] = [
-    { text: '#', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'center', valign: 'middle' } },
-    { text: 'Area', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'left', valign: 'middle' } },
-    { text: 'Pergunta', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'left', valign: 'middle' } },
-    { text: 'Grau', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'center', valign: 'middle' } },
-    { text: 'Esforco', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'center', valign: 'middle' } },
-    { text: 'Impacto', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'center', valign: 'middle' } },
-    { text: 'Acao', options: { bold: true, fill: { color: COLORS.primary }, color: COLORS.white, fontFace: FONT, fontSize: 8, align: 'left', valign: 'middle' } },
-  ];
+  const totalPages = Math.ceil(wins.length / ITEMS_PER_SLIDE);
 
-  const dataRows: PptxGenJS.TableRow[] = wins.map((qw, idx) => {
-    const bg = idx % 2 === 0 ? COLORS.white : COLORS.lightGray;
-    const effortColor = getEffortImpactColor(qw.estimatedEffort);
-    const impactColor = getEffortImpactColor(qw.estimatedImpact);
-    // Get first action from action plan
-    const firstAction = qw.actionPlan.split('|')[0]?.trim() || qw.actionPlan;
+  for (let page = 0; page < totalPages; page++) {
+    const slide = pptx.addSlide();
+    slide.background = { color: COLORS.offWhite };
+    const pageLabel = totalPages > 1 ? ` (${page + 1}/${totalPages})` : '';
+    addContentSlideHeader(slide, `Quick Wins${pageLabel}`);
 
-    return [
-      { text: `${idx + 1}`, options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, align: 'center', valign: 'middle' } },
-      { text: qw.areaName, options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, align: 'left', valign: 'middle' } },
-      { text: truncate(qw.questionText, 60), options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, align: 'left', valign: 'middle' } },
-      { text: `${qw.currentGrade}/5`, options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, bold: true, align: 'center', valign: 'middle', color: getGradeColor(qw.currentGrade) } },
-      { text: qw.estimatedEffort, options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, bold: true, align: 'center', valign: 'middle', color: effortColor } },
-      { text: qw.estimatedImpact, options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, bold: true, align: 'center', valign: 'middle', color: impactColor } },
-      { text: truncate(firstAction, 55), options: { fill: { color: bg }, fontFace: FONT, fontSize: 8, align: 'left', valign: 'middle' } },
-    ];
-  });
+    const pageWins = wins.slice(page * ITEMS_PER_SLIDE, (page + 1) * ITEMS_PER_SLIDE);
+    const cardH = 1.05;
+    const cardGap = 0.15;
+    let cardY = 1.2;
 
-  const tableW = CONTENT_W;
-  slide.addTable([headerRow, ...dataRows], {
-    x: MARGIN_X,
-    y: 1.0,
-    w: tableW,
-    colW: [tableW * 0.04, tableW * 0.1, tableW * 0.28, tableW * 0.06, tableW * 0.08, tableW * 0.08, tableW * 0.36],
-    rowH: 0.42,
-    border: { type: 'solid', pt: 0.5, color: COLORS.mediumGray },
-    margin: [2, 4, 2, 4],
-  });
+    for (const qw of pageWins) {
+      const effortColor = getEffortImpactColor(qw.estimatedEffort);
+      const impactColor = getEffortImpactColor(qw.estimatedImpact);
+      const gradeColor = getGradeColor(qw.currentGrade);
+
+      // Card background
+      slide.addShape('rect', {
+        x: MARGIN_X, y: cardY, w: CONTENT_W, h: cardH,
+        fill: { color: COLORS.white },
+        line: { color: COLORS.mediumGray, pt: 0.5 },
+        rectRadius: 0.06,
+      });
+
+      // Left accent bar
+      slide.addShape('rect', {
+        x: MARGIN_X, y: cardY, w: 0.07, h: cardH,
+        fill: { color: COLORS.accent },
+      });
+
+      // Area + Question
+      slide.addText(qw.areaName, {
+        x: MARGIN_X + 0.25, y: cardY + 0.08, w: 7, h: 0.25,
+        fontFace: BODY_FONT, fontSize: 9, bold: true, color: COLORS.accent,
+      });
+      slide.addText(truncate(qw.questionText, 100), {
+        x: MARGIN_X + 0.25, y: cardY + 0.3, w: 7.5, h: 0.25,
+        fontFace: BODY_FONT, fontSize: 11, color: COLORS.text,
+      });
+
+      // Action plan
+      const firstAction = qw.actionPlan.split('|')[0]?.trim() || qw.actionPlan;
+      slide.addText(`→ ${truncate(firstAction, 90)}`, {
+        x: MARGIN_X + 0.25, y: cardY + 0.58, w: 7.5, h: 0.25,
+        fontFace: BODY_FONT, fontSize: 9, italic: true, color: COLORS.darkGray,
+      });
+
+      // Right side badges
+      const badgesX = SLIDE_W - MARGIN_X - 4.2;
+
+      // Grade badge
+      slide.addShape('rect', {
+        x: badgesX, y: cardY + 0.15, w: 1.1, h: 0.3,
+        fill: { color: gradeColor }, rectRadius: 0.15,
+      });
+      slide.addText(`Grau ${qw.currentGrade}`, {
+        x: badgesX, y: cardY + 0.15, w: 1.1, h: 0.3,
+        fontFace: BODY_FONT, fontSize: 9, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
+      });
+
+      // Effort badge
+      slide.addShape('rect', {
+        x: badgesX + 1.3, y: cardY + 0.15, w: 1.3, h: 0.3,
+        fill: { color: effortColor }, rectRadius: 0.15,
+      });
+      slide.addText(`Esforço: ${getEffortImpactLabel(qw.estimatedEffort)}`, {
+        x: badgesX + 1.3, y: cardY + 0.15, w: 1.3, h: 0.3,
+        fontFace: BODY_FONT, fontSize: 8, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
+      });
+
+      // Impact badge
+      slide.addShape('rect', {
+        x: badgesX + 2.8, y: cardY + 0.15, w: 1.3, h: 0.3,
+        fill: { color: impactColor }, rectRadius: 0.15,
+      });
+      slide.addText(`Impacto: ${getEffortImpactLabel(qw.estimatedImpact)}`, {
+        x: badgesX + 2.8, y: cardY + 0.15, w: 1.3, h: 0.3,
+        fontFace: BODY_FONT, fontSize: 8, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
+      });
+
+      cardY += cardH + cardGap;
+    }
+  }
 }
+
+// ────────────────────────────────────────────────────────────
+// Próximos Passos (contextualizados)
+// ────────────────────────────────────────────────────────────
 
 function buildProximosPassosSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
   const slide = pptx.addSlide();
-  addTopBar(slide);
-  addSlideNumber(slide);
+  slide.background = { color: COLORS.offWhite };
+  addContentSlideHeader(slide, 'Próximos Passos');
 
-  slide.addText('Proximos Passos', {
-    x: MARGIN_X,
-    y: 0.25,
-    w: CONTENT_W,
-    h: 0.55,
-    fontFace: FONT,
-    fontSize: 26,
-    bold: true,
-    color: COLORS.primary,
-  });
-
-  // Decorative line
-  slide.addShape('rect', {
-    x: MARGIN_X,
-    y: 0.9,
-    w: 2.0,
-    h: 0.03,
-    fill: { color: COLORS.accent },
-  });
+  // Generate contextual steps based on weakest areas
+  const sortedAreas = [...result.areaScores].sort((a, b) => a.score - b.score);
+  const weakest = sortedAreas[0];
+  const secondWeakest = sortedAreas[1];
 
   const steps = [
-    'Revisao detalhada dos riscos identificados',
-    'Priorizacao dos planos de acao por area',
-    'Definicao de responsaveis e prazos',
-    'Acompanhamento periodico da evolucao',
+    `Priorizar a estruturação da área de ${weakest.areaName} (nota ${weakest.score.toFixed(2)})`,
+    secondWeakest.score < 3
+      ? `Desenvolver controles para ${secondWeakest.areaName} (nota ${secondWeakest.score.toFixed(2)})`
+      : `Fortalecer governança em ${secondWeakest.areaName}`,
+    result.quickWins.length > 0
+      ? `Implementar ${Math.min(result.quickWins.length, 5)} quick wins identificados para ganhos imediatos`
+      : 'Revisar processos críticos e formalizar controles básicos',
+    'Definir responsáveis e cronograma de implementação',
+    'Agendar reavaliação em 90 dias para medir evolução',
   ];
 
-  let stepY = 1.4;
+  let stepY = 1.3;
   for (let i = 0; i < steps.length; i++) {
     // Number circle
     slide.addShape('ellipse', {
-      x: MARGIN_X + 0.3,
-      y: stepY,
-      w: 0.5,
-      h: 0.5,
+      x: MARGIN_X + 0.3, y: stepY, w: 0.5, h: 0.5,
       fill: { color: COLORS.accent },
     });
     slide.addText(`${i + 1}`, {
-      x: MARGIN_X + 0.3,
-      y: stepY,
-      w: 0.5,
-      h: 0.5,
-      fontFace: FONT,
-      fontSize: 16,
-      bold: true,
-      color: COLORS.white,
-      align: 'center',
-      valign: 'middle',
+      x: MARGIN_X + 0.3, y: stepY, w: 0.5, h: 0.5,
+      fontFace: BODY_FONT, fontSize: 16, bold: true, color: COLORS.white, align: 'center', valign: 'middle',
     });
 
     // Step text
     slide.addText(steps[i], {
-      x: MARGIN_X + 1.1,
-      y: stepY,
-      w: CONTENT_W - 1.5,
-      h: 0.5,
-      fontFace: FONT,
-      fontSize: 16,
-      color: COLORS.text,
-      valign: 'middle',
+      x: MARGIN_X + 1.1, y: stepY, w: CONTENT_W - 1.5, h: 0.5,
+      fontFace: BODY_FONT, fontSize: 15, color: COLORS.text, valign: 'middle',
     });
 
-    // Connector line (except last)
+    // Connector
     if (i < steps.length - 1) {
       slide.addShape('rect', {
-        x: MARGIN_X + 0.53,
-        y: stepY + 0.5,
-        w: 0.04,
-        h: 0.6,
+        x: MARGIN_X + 0.53, y: stepY + 0.5, w: 0.04, h: 0.55,
         fill: { color: COLORS.mediumGray },
       });
     }
 
-    stepY += 1.1;
+    stepY += 1.05;
   }
+}
 
-  // Bottom branding
-  slide.addShape('rect', {
-    x: 0,
-    y: SLIDE_H - 0.9,
-    w: SLIDE_W,
-    h: 0.9,
-    fill: { color: COLORS.primary },
+// ────────────────────────────────────────────────────────────
+// Slide de Encerramento com CTA
+// ────────────────────────────────────────────────────────────
+
+function buildClosingSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
+  const slide = pptx.addSlide();
+  slide.background = { color: COLORS.navy };
+
+  // O2 Inc branding
+  slide.addText('O2 Inc.', {
+    x: MARGIN_X, y: 1.5, w: CONTENT_W, h: 0.6,
+    fontFace: BODY_FONT, fontSize: 22, bold: true, color: COLORS.accent, align: 'center',
   });
-  slide.addText('O2 Inc. \u2014 CFO as a Service', {
-    x: MARGIN_X,
-    y: SLIDE_H - 0.9,
-    w: CONTENT_W,
-    h: 0.9,
-    fontFace: FONT,
-    fontSize: 18,
-    bold: true,
-    color: COLORS.white,
-    align: 'center',
-    valign: 'middle',
+
+  // Main CTA
+  slide.addText('Próxima Etapa', {
+    x: MARGIN_X, y: 2.5, w: CONTENT_W, h: 0.8,
+    fontFace: TITLE_FONT, fontSize: 36, bold: true, color: COLORS.white, align: 'center',
+  });
+
+  // CTA subtitle
+  slide.addText('Agendar reunião de devolutiva e planejamento', {
+    x: MARGIN_X, y: 3.3, w: CONTENT_W, h: 0.5,
+    fontFace: BODY_FONT, fontSize: 18, color: COLORS.textMuted, align: 'center',
+  });
+
+  // Separator
+  slide.addShape('rect', {
+    x: SLIDE_W / 2 - 1.5, y: 4.2, w: 3, h: 0.03,
+    fill: { color: COLORS.accent },
+  });
+
+  // Contact info
+  slide.addText('CFO as a Service', {
+    x: MARGIN_X, y: 4.6, w: CONTENT_W, h: 0.5,
+    fontFace: BODY_FONT, fontSize: 16, bold: true, color: COLORS.accentLight, align: 'center',
+  });
+
+  slide.addText(`Diagnóstico realizado em ${formatDate(result.datePerformed)}`, {
+    x: MARGIN_X, y: 5.2, w: CONTENT_W, h: 0.4,
+    fontFace: BODY_FONT, fontSize: 12, color: COLORS.darkGray, align: 'center',
+  });
+
+  // Confidential
+  slide.addText('Confidencial — Este documento contém informações estratégicas.', {
+    x: MARGIN_X, y: 6.5, w: CONTENT_W, h: 0.4,
+    fontFace: BODY_FONT, fontSize: 10, italic: true, color: COLORS.darkGray, align: 'center',
   });
 }
 
@@ -853,33 +819,36 @@ function buildProximosPassosSlide(pptx: PptxGenJS, result: DiagnosticResult): vo
 export async function generateDiagnosticPptx(result: DiagnosticResult): Promise<void> {
   const pptx = new PptxGenJS();
 
-  // Presentation metadata
   pptx.layout = 'LAYOUT_WIDE';
   pptx.author = 'O2 Inc.';
   pptx.company = 'O2 Inc.';
-  pptx.title = `Diagnostico 360 - ${result.companyName}`;
+  pptx.title = `Diagnóstico 360° - ${result.companyName}`;
   pptx.subject = 'Grau de Maturidade Financeira';
 
-  // Slide 1: Capa
+  // 1. Capa
   buildCoverSlide(pptx, result);
 
-  // Slide 2: Resultado Geral
+  // 2. Executive Summary
+  buildExecutiveSummarySlide(pptx, result);
+
+  // 3. Resultado por Área (Radar + Bar chart)
   buildResultadoGeralSlide(pptx, result);
 
-  // Slides 3-8: Area slides
+  // 4-9. Slides por área
   const areaOrder = ['Contabilidade', 'Controladoria', 'Financeiro', 'Fiscal', 'Planejamento', 'Comercial'];
   for (const areaName of areaOrder) {
-    const area = result.areaScores.find((a) => a.areaName === areaName);
-    if (area) {
-      buildAreaSlide(pptx, result, area);
-    }
+    const area = result.areaScores.find(a => a.areaName === areaName);
+    if (area) buildAreaSlide(pptx, result, area);
   }
 
-  // Slide 9: Quick Wins
-  buildQuickWinsSlide(pptx, result);
+  // 10+. Quick Wins (paginados)
+  buildQuickWinsSlides(pptx, result);
 
-  // Slide 10: Proximos Passos
+  // 11. Próximos Passos
   buildProximosPassosSlide(pptx, result);
+
+  // 12. Encerramento
+  buildClosingSlide(pptx, result);
 
   // Generate filename
   const safeCompanyName = result.companyName
@@ -889,6 +858,5 @@ export async function generateDiagnosticPptx(result: DiagnosticResult): Promise<
   const dateStr = new Date(result.datePerformed).toISOString().split('T')[0];
   const fileName = `diagnostico-360-${safeCompanyName}-${dateStr}`;
 
-  // Download
   await pptx.writeFile({ fileName });
 }
