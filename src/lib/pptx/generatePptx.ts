@@ -347,7 +347,7 @@ function buildResultadoGeralSlide(pptx: PptxGenJS, result: DiagnosticResult): vo
     values: result.areaScores.map(a => a.score),
   }];
 
-  slide.addChart(pptx.charts.RADAR, radarData, {
+  slide.addChart((pptx as any).charts.RADAR, radarData, {
     x: MARGIN_X, y: 1.2, w: 5.5, h: 4.8,
     radarStyle: 'filled',
     chartColors: [COLORS.accent],
