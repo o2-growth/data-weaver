@@ -370,7 +370,7 @@ function buildResultadoGeralSlide(pptx: PptxGenJS, result: DiagnosticResult): vo
 
   const barColors = result.areaScores.map(a => getGradeColor(a.maturityLevel));
 
-  slide.addChart(pptx.charts.BAR, barData, {
+  slide.addChart((pptx as any).charts.BAR, barData, {
     x: 6.5, y: 1.2, w: 6.1, h: 4.8,
     barDir: 'bar',
     chartColors: barColors,
