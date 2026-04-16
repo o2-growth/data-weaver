@@ -1,80 +1,108 @@
 
+
 ## Objetivo
 
-Replicar o design system premium da Landing Page (dark absoluto + verde neon + glassmorphism + motion) em toda a plataforma autenticada: Login, Index (iniciar diagnóstico), Questionnaire, Results e PresentationMode.
+1. Renomear plataforma: "Diagnóstico 360°" → **"Grau de Maturidade"** em toda a UI (logo, títulos, headers, footer, `document.title`).
+2. Corrigir incongruências internas na plataforma autenticada (Index, Results, Questionnaire, PresentationMode) para refletir os números reais: **6 áreas, 54 perguntas, 270 riscos, 5 graus**.
+3. Reescrever a copy da Landing Page para vender **exatamente** o que a plataforma entrega — sem mexer no visual (paleta, motion, glassmorphism, estrutura de sections permanecem idênticos).
 
-## Princípios visuais a propagar
+## Mudança 1 — Renomear para "Grau de Maturidade"
 
-- **Background**: `#0A0A0A` absoluto (alternando com `#0D0D0D` em sections)
-- **Cards**: `bg-white/[0.02]` + `border border-white/6` + `backdrop-blur` + hover `border-[#7EBF8E]/30`
-- **CTAs primários**: gradiente `from-[#4CAF50] to-[#00E676]`, texto preto, `rounded-2xl`, `shadow-xl shadow-[#4CAF50]/30`, `animate-glow-pulse`
-- **CTAs secundários**: outline `border-white/12` + hover `border-white/25 bg-white/4`
-- **Eyebrows**: badge pill `border-[#7EBF8E]/30 bg-[#7EBF8E]/8` + texto uppercase `tracking-widest text-[#7EBF8E]`
-- **Headlines**: `font-black tracking-tight` com gradient text `from-[#7EBF8E] to-[#00E676]` no destaque
-- **Tipografia**: Space Grotesk (display) + Inter (body) — já carregadas
-- **Motion**: scroll-reveal, count-up, mouse-glow sutil em hero areas, transições 300ms
+Substituir em todos os componentes onde aparece "Diagnóstico 360°" / "Diagnóstico 360":
 
-## Páginas a refatorar
+- `LandingPage.tsx` (`document.title`, `<h1 sr-only>`)
+- `LPNavbar.tsx` (wordmark "Diagnóstico 360")
+- `Index.tsx` (header, hero h1, eyebrow)
+- `Results.tsx` (header, hero subtítulo)
+- `Questionnaire.tsx` (header, se houver)
+- `PresentationMode.tsx` (slides de capa)
+- `LoginPage.tsx` (se houver título)
 
-### 1. `src/pages/LoginPage.tsx`
-- Fundo `#0A0A0A` com partículas sutis (densidade reduzida)
-- Card central glassmorphism centralizado
-- Logo "O2" gradient verde no topo
-- Botão login com gradient + glow
+Novo wordmark: **"Grau de"** (branco) + **"Maturidade"** (gradient verde).
+Manter o badge "O2" e a tagline "CFOs as a Service".
 
-### 2. `src/pages/Index.tsx` (dashboard pré-diagnóstico)
-- Reescrever no estilo dark premium
-- Hero compacto com eyebrow + headline gradient
-- Card "Iniciar Diagnóstico" como glass-card
-- Features grid: cards translucentes com ícones em containers `bg-[#4CAF50]/10`
-- "Como funciona" com cards numerados (igual LPHowItWorks)
-- Footer dark consistente
+## Mudança 2 — Corrigir plataforma
 
-### 3. `src/pages/Questionnaire.tsx`
-- Background `#0A0A0A` + sticky header glassmorphism (`bg-[#0A0A0A]/95 backdrop-blur-md border-b border-white/8`)
-- Progress bar verde neon
-- QuestionCard reformulado: glass-card, opções como pills outline com hover verde
-- Botões nav (anterior/próximo) no estilo LP
+### `src/pages/Index.tsx`
+- Hero subtítulo: já diz "6 áreas / 54 perguntas" → manter ✅
+- `features[]` array: corrigir
+  - "5 Áreas Estratégicas" → **"6 Áreas Estratégicas"** + lista: Contabilidade, Controladoria, Financeiro, Fiscal, Planejamento, Comercial
+  - "48 Perguntas Especializadas" → **"54 Perguntas Especializadas"**
+  - "240 análises de risco" → **"270 análises de risco pré-configuradas"**
 
-### 4. `src/components/QuestionCard.tsx`
-- Container glass + bordas brancas sutis
-- Botões de grau (1-5): outline base, ativo com `border-[#00E676] bg-[#00E676]/10 text-white`
-- Número grande + descrição embaixo
+### `src/pages/Results.tsx`
+- Hero subtítulo já usa `result.totalQuestions` dinâmico ✅
+- Verificar se "360°" aparece em algum subtítulo → trocar por "Grau de Maturidade"
 
-### 5. `src/pages/Results.tsx`
-- Background `#0A0A0A`
-- Hero com score grande + count-up
-- Cards de área (10) usando TiltCard reaproveitado
-- RadarChart com cores neon adaptadas
-- Quick wins, riscos: glass-cards
-- Botões PDF/PPTX com gradient
+### `src/pages/Questionnaire.tsx` e `PresentationMode.tsx`
+- Usar valores derivados de `areas`, `questions` (já dinâmicos). Apenas trocar o nome da plataforma.
 
-### 6. `src/pages/PresentationMode.tsx`
-- Slides em `#0A0A0A` puro
-- Tipografia Space Grotesk gigante
-- Eyebrows e headlines gradient
-- Controles de navegação outline brancos sutis
+## Mudança 3 — Adaptar Landing Page (copy only, zero visual)
 
-## Componentes auxiliares
+### `LPHero.tsx`
+- Eyebrow: "Diagnóstico 360° · O2 Inc" → **"Grau de Maturidade · O2 Inc"**
+- Headline: manter conceito, ajustar para alinhar com diagnóstico financeiro/contábil
+  - "Descubra o **grau de maturidade** financeira da sua empresa."
+- Subhead: "10 áreas críticas" → **"6 áreas estratégicas (Contabilidade, Controladoria, Financeiro, Fiscal, Planejamento e Comercial)"**
+- Stats: substituir números fictícios (2.000 empresas / 88 NPS / 2 Bi) por números reais e verificáveis do produto:
+  - **54** perguntas especializadas
+  - **6** áreas estratégicas
+  - **270** análises de risco
+- Manter motion (count-up funciona com qualquer número).
 
-- **`src/components/ui/glass-card.tsx`** (novo): wrapper reutilizável com classes glassmorphism
-- **`src/components/ui/neon-button.tsx`** (novo): variantes `primary` (gradient + glow) e `outline` (white/12)
-- **`MaturityBadge`, `QuickWinCard`, `RiskCard`, `RadarChart`**: ajustar paleta para neon + glass
+### `LPSocialProof.tsx`
+- Marquee de 12 segmentos genéricos → manter ou enxugar. **Trocar headline** "Empresas de todos os segmentos confiam no diagnóstico" para algo mais honesto: **"Aplicável a empresas de qualquer porte e segmento"**. Manter visual marquee.
 
-## Ajustes globais
+### `LPHowItWorks.tsx`
+- Steps já estão genéricos e corretos. Pequeno ajuste no step 1: "10 áreas" → **"6 áreas"**.
 
-- **`src/index.css`**: adicionar utilitários `.glass-card`, `.btn-neon-primary`, `.btn-neon-outline`, `.eyebrow-pill`, `.gradient-text-neon` — assim a refatoração das páginas vira aplicação de classes, não duplicação de Tailwind
-- **`src/App.tsx`**: garantir que `body` herda `bg-[#0A0A0A]` em todas as rotas autenticadas
+### `LPAreas.tsx` ⚠️ **maior reescrita**
+- Atualmente lista 10 áreas inventadas (Societário, Tecnologia, Marketing, RH, etc.) que **não existem** na engine.
+- Substituir pelas **6 áreas reais** com pesos reais:
+  - Contabilidade (15%) — `BookOpen`
+  - Controladoria (25%) — `PieChart`
+  - Financeiro (25%) — `DollarSign`
+  - Fiscal (15%) — `Receipt`
+  - Planejamento (10%) — `Target`
+  - Comercial (10%) — `ShoppingCart`
+- Atualizar eyebrow: "10 áreas avaliadas" → **"6 áreas avaliadas"**
+- Mostrar peso de cada área no card (badge sutil com %).
+- Grid muda de `lg:grid-cols-5` para `lg:grid-cols-3 md:grid-cols-2` (6 itens). Mantém TiltCard, hover neon, animação stagger.
 
-## Fora de escopo
+### `LPResults.tsx`
+- Mockup dashboard: trocar áreas fictícias (Tecnologia, Marketing) pelas 6 reais.
+- Lista de deliverables: "10 áreas" → **"6 áreas"**, manter o resto (PDF, PPTX, modo apresentação, quick wins, mapa de risco) — já bate com o que a plataforma entrega.
 
-- Não mexer em PDF/PPTX (geradores precisam de paleta clara para impressão/projeção corporativa)
-- Não trocar a estrutura de rotas
-- Não criar tema light alternativo (dark-only, conforme decisão anterior)
+### `LPTestimonials.tsx`
+- Depoimentos fictícios. **Manter visual** mas trocar copy para depoimentos genéricos/anonimizados ou substituir por **3 cards de "Para quem é"** (CFO, Controller, Founder) com visual idêntico (avatar com iniciais, stars, quote em itálico). Pergunta: o usuário pediu para não mexer no visual — manter os 3 cards no mesmo layout, só ajustar texto para mensagens neutras tipo "Material direto e acionável" / "Estrutura clara para reunião de board" / "Identifica gargalos rapidamente", sem nomes inventados (usar funções: "CFO · Indústria", "Controller · Varejo", "Founder · SaaS").
+
+### `LPPricing.tsx`
+- Lista de benefícios: "10 áreas" → **"6 áreas"**.
+- Demais itens (PDF, PPTX, modo apresentação, mapa de risco, quick wins) batem ✅.
+- "Garantia incondicional 7 dias" → manter se for política real; se não, trocar por **"Acesso completo após cadastro"**. Vou trocar por neutra para evitar promessa não suportada.
+
+### `LPFAQ.tsx`
+- "30 a 45 minutos" → ajustar para tempo real (54 perguntas ≈ 25-35 min). Manter resto.
+
+### `LPFooter.tsx`
+- Headline final: "raio-X da sua empresa" → manter (alinhado).
+- Wordmark: aplicar mudança 1.
+
+## Fora de escopo (preservado intacto)
+
+- Paleta `#0A0A0A` / `#00E676` / `#7EBF8E` — **inalterada**
+- Glassmorphism, bordas, transparências — **inalteradas**
+- Motion (particles, tilt, count-up, scroll-reveal, marquee, glow-pulse) — **inalterada**
+- Estrutura de sections da LP — **inalterada**
+- Componentes de motion (`useMouseGlow`, `FloatingParticles`, `TiltCard`) — **inalterados**
+- PDF/PPTX generators — **inalterados**
 
 ## Ordem de execução
 
-1. Criar utilitários CSS reutilizáveis em `index.css`
-2. Criar `GlassCard` e `NeonButton` (opcional, se ajudar consistência)
-3. Refatorar Login → Index → Questionnaire (+ QuestionCard) → Results (+ cards filhos) → PresentationMode
-4. Validar visual end-to-end
+1. Renomear "Diagnóstico 360°" → "Grau de Maturidade" em todos os arquivos (busca global).
+2. Corrigir `Index.tsx features[]` (5→6, 48→54, 240→270).
+3. Reescrever `LPAreas.tsx` (10 → 6 áreas reais).
+4. Atualizar `LPHero.tsx` stats e copy.
+5. Atualizar `LPResults.tsx`, `LPPricing.tsx`, `LPHowItWorks.tsx`, `LPSocialProof.tsx`, `LPTestimonials.tsx`, `LPFAQ.tsx`, `LPFooter.tsx`.
+6. Validar visualmente que nada visual mudou — só copy/números.
+
