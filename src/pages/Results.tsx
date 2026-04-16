@@ -333,7 +333,7 @@ export default function Results() {
             </div>
             <div className="min-w-0">
               <span className="text-sm font-bold tracking-tight block truncate">
-                Diagnóstico <span className="gradient-text-neon">360°</span>
+                Grau de <span className="gradient-text-neon">Maturidade</span>
               </span>
               <p className="text-[10px] text-[#A0A0A0] truncate">{result.companyName} &middot; {formattedDate}</p>
             </div>
@@ -361,7 +361,7 @@ export default function Results() {
               {result.companyName}
             </h1>
             <p className="text-[#A0A0A0]">
-              Diagnóstico Financeiro <span className="gradient-text-neon font-semibold">360°</span> &middot;{" "}
+              <span className="gradient-text-neon font-semibold">Grau de Maturidade</span> Financeira &middot;{" "}
               {result.answeredQuestions}/{result.totalQuestions} perguntas respondidas
             </p>
           </div>

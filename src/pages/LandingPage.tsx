@@ -17,19 +17,19 @@ import { LPFooter } from "@/components/landing/LPFooter";
  */
 export default function LandingPage() {
   useEffect(() => {
-    document.title = "Diagnóstico 360° | O2 Inc — Para onde está indo o dinheiro da sua empresa?";
+    document.title = "Grau de Maturidade | O2 Inc — Avalie a maturidade financeira da sua empresa";
     const meta = document.querySelector('meta[name="description"]');
     if (meta) {
       meta.setAttribute(
         "content",
-        "Diagnóstico de maturidade financeira em 10 áreas críticas. Relatório executivo pronto para a próxima reunião do board.",
+        "Avalie o grau de maturidade financeira da sua empresa em 6 áreas estratégicas, com 54 perguntas e 270 análises de risco. Relatório executivo pronto para o board.",
       );
     }
   }, []);
 
   return (
     <main className="bg-[#0A0A0A] text-white min-h-screen font-sans">
-      <h1 className="sr-only">Diagnóstico 360° — O2 Inc</h1>
+      <h1 className="sr-only">Grau de Maturidade — O2 Inc</h1>
       <LPNavbar />
       <LPHero />
       <LPSocialProof />

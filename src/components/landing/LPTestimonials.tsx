@@ -4,24 +4,24 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 const testimonials = [
   {
     quote:
-      "Em três semanas saímos de 'achismos' para um plano de 90 dias com priorização clara. O relatório virou tese de board.",
-    name: "Mariana Costa",
-    role: "CFO · Indústria de embalagens",
-    initials: "MC",
+      "Material direto e acionável: a estrutura do relatório vira tese de board sem precisar de adaptação.",
+    name: "Para CFOs",
+    role: "Visão executiva e priorização",
+    initials: "CF",
   },
   {
     quote:
-      "O diagnóstico expôs gargalos que a equipe interna não via há anos. ROI pago no primeiro quick win.",
-    name: "Rafael Mendonça",
-    role: "CEO · Rede de varejo",
-    initials: "RM",
+      "Estrutura clara para a reunião de devolutiva: grau por área, riscos priorizados e quick wins por onde começar.",
+    name: "Para Controllers",
+    role: "Diagnóstico operacional",
+    initials: "CT",
   },
   {
     quote:
-      "Nunca vi um material tão direto. Apresentei para o investidor sem precisar adaptar uma vírgula.",
-    name: "Juliana Prado",
-    role: "Founder · SaaS B2B",
-    initials: "JP",
+      "Identifica gargalos rapidamente em 6 áreas críticas — ideal para founders que precisam de um raio-X financeiro objetivo.",
+    name: "Para Founders",
+    role: "Visão de negócio 360°",
+    initials: "FD",
   },
 ];
 
@@ -32,12 +32,12 @@ export function LPTestimonials() {
       <div ref={ref} className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E] mb-3">
-            Depoimentos
+            Para quem é
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-white">
-            Quem fez,{" "}
+            Feito para quem{" "}
             <span className="bg-gradient-to-r from-[#7EBF8E] to-[#00E676] bg-clip-text text-transparent">
-              recomenda.
+              decide com números.
             </span>
           </h2>
         </div>

@@ -19,7 +19,7 @@ export function LPSocialProof() {
     <section className="relative py-16 bg-[#0D0D0D] border-y border-white/[0.06] overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 mb-8 text-center">
         <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E]">
-          Empresas de todos os segmentos confiam no diagnóstico
+          Aplicável a empresas de qualquer porte e segmento
         </p>
       </div>
       <div className="relative w-full overflow-hidden">

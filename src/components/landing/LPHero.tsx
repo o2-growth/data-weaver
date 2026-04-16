@@ -67,24 +67,25 @@ export function LPHero() {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#7EBF8E]/30 bg-[#7EBF8E]/[0.08] mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
           <span className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E]">
-            Diagnóstico 360° · O2 Inc
+            Grau de Maturidade · O2 Inc
           </span>
         </div>
 
         {/* Headline */}
         <h1 className="font-display text-5xl md:text-7xl font-black tracking-tight leading-[1.05] text-white">
-          Descubra para onde está indo{" "}
+          Descubra o{" "}
           <span className="bg-gradient-to-r from-[#7EBF8E] to-[#00E676] bg-clip-text text-transparent">
-            o dinheiro
+            grau de maturidade
           </span>{" "}
-          da sua empresa.
+          financeira da sua empresa.
         </h1>
 
         {/* Subhead */}
         <p className="mt-6 text-lg md:text-xl text-[#A0A0A0] leading-relaxed max-w-2xl mx-auto">
-          Um raio-X completo da maturidade financeira do seu negócio em{" "}
-          <strong className="text-white">10 áreas críticas</strong>, com
-          relatório executivo pronto para a próxima reunião.
+          Avaliação estruturada em{" "}
+          <strong className="text-white">6 áreas estratégicas</strong> —
+          Contabilidade, Controladoria, Financeiro, Fiscal, Planejamento e
+          Comercial — com relatório executivo pronto para a próxima reunião.
         </p>
 
         {/* CTAs */}
@@ -108,9 +109,9 @@ export function LPHero() {
 
         {/* Stats */}
         <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16">
-          <Stat prefix="+" value={2000} label="empresas atendidas" />
-          <Stat value={88} suffix=" NPS" label="satisfação dos clientes" />
-          <Stat prefix="+R$" value={2} suffix=" Bi" label="em operações analisadas" />
+          <Stat value={6} label="áreas estratégicas" />
+          <Stat value={54} label="perguntas especializadas" />
+          <Stat value={270} label="análises de risco" />
         </div>
       </div>
 

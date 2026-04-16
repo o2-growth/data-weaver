@@ -6,13 +6,13 @@ const steps = [
     n: "01",
     icon: ClipboardList,
     title: "Responda o questionário",
-    body: "10 áreas, perguntas objetivas. Em ~30 minutos você completa o panorama da empresa.",
+    body: "6 áreas e 54 perguntas objetivas. Em ~30 minutos você completa o panorama financeiro da empresa.",
   },
   {
     n: "02",
     icon: Cpu,
     title: "Análise automática",
-    body: "Nossa engine cruza respostas com a matriz de risco e calcula o score de maturidade por área.",
+    body: "Nossa engine cruza respostas com 270 análises de risco e calcula o grau de maturidade por área.",
   },
   {
     n: "03",

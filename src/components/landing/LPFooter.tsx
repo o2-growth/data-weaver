@@ -14,13 +14,13 @@ export function LPFooter() {
           </span>
         </h2>
         <p className="text-[#A0A0A0] mb-8 max-w-xl mx-auto">
-          30 minutos agora podem mudar a próxima década do seu negócio.
+          ~30 minutos agora podem mudar a próxima década do seu negócio.
         </p>
         <button
           onClick={() => navigate("/login")}
           className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.03] transition-all animate-glow-pulse"
         >
-          Fazer o Diagnóstico →
+          Avaliar minha empresa →
         </button>
       </div>
 

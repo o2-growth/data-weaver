@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const benefits = [
-  "Acesso completo ao diagnóstico das 10 áreas",
+  "Avaliação completa das 6 áreas estratégicas (54 perguntas)",
   "Relatório PDF executivo com identidade O2 Inc",
   "PowerPoint editável pronto para apresentar",
   "Modo apresentação para a reunião de devolutiva",
-  "Mapa de risco + quick wins priorizados",
+  "Mapa de risco com 270 análises + quick wins priorizados",
   "Suporte por e-mail durante o preenchimento",
 ];
 
@@ -60,7 +60,7 @@ export function LPPricing() {
 
           <div className="mt-6 flex items-center justify-center gap-2 text-[#606060] text-xs">
             <Shield className="w-3.5 h-3.5 text-[#7EBF8E]" />
-            <span>Garantia incondicional de 7 dias</span>
+            <span>Acesso completo após cadastro</span>
           </div>
         </div>
       </div>

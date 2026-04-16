@@ -8,8 +8,8 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const faqs = [
   {
-    q: "Quanto tempo leva para responder o diagnóstico?",
-    a: "Em média 30 a 45 minutos. Você pode pausar e retomar a qualquer momento — suas respostas ficam salvas.",
+    q: "Quanto tempo leva para responder a avaliação?",
+    a: "Em média 25 a 35 minutos para as 54 perguntas. Você pode pausar e retomar a qualquer momento — suas respostas ficam salvas.",
   },
   {
     q: "Quem deve responder o questionário?",
@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     q: "Serve para empresas pequenas?",
-    a: "Sim. O diagnóstico se adapta ao porte: as perguntas são as mesmas, mas a leitura de maturidade é contextualizada para o estágio do negócio.",
+    a: "Sim. A avaliação se adapta ao porte: as perguntas são as mesmas, mas a leitura de maturidade é contextualizada para o estágio do negócio.",
   },
 ];
 
