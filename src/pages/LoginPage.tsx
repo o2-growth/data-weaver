@@ -1,17 +1,14 @@
 // ============================================================
-// Login Page — Dual Mode
-// Se Supabase não configurado: botão para entrar no modo local
-// Se configurado: formulário de email + senha
+// Login Page — Dark Premium DS (alinhado à Landing Page)
 // ============================================================
 
 import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Shield, LogIn, AlertCircle } from 'lucide-react';
+import { GlassCard } from '@/components/ui/glass-card';
+import { NeonButton } from '@/components/ui/neon-button';
+import { Shield, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
@@ -23,7 +20,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Se já autenticado, redirecionar (via componente para evitar side-effect no render)
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
@@ -32,7 +28,6 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
-
     try {
       await login(email, password);
       navigate('/', { replace: true });
@@ -56,133 +51,141 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen lp-bg text-white flex flex-col relative overflow-hidden">
+      {/* Subtle grid backdrop */}
+      <div className="absolute inset-0 lp-grid-bg pointer-events-none opacity-60" />
+      {/* Radial glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 40% at 50% 30%, rgba(0,230,118,0.10) 0%, transparent 60%)',
+        }}
+      />
+
       {/* Header */}
-      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="relative z-10 lp-header">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Shield className="w-7 h-7 text-primary" />
-            <span className="text-lg font-bold tracking-tight">O2 Inc</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center">
+              <span className="text-[#0A0A0A] font-black text-xs">O2</span>
+            </div>
+            <span className="text-sm font-bold tracking-tight">
+              Diagnóstico <span className="gradient-text-neon">360°</span>
+            </span>
           </div>
-          <Badge variant="secondary" className="text-xs">
-            CFOs as a Service
-          </Badge>
+          <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
         </div>
       </header>
 
-      {/* Main — centralized vertically */}
-      <main className="flex-1 flex items-center justify-center px-6 py-16 hero-gradient">
-        <div className="w-full max-w-md space-y-6 animate-fade-in">
+      {/* Main */}
+      <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-md space-y-8 animate-fade-in">
           {/* Branding */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-2">
-              <Shield className="w-8 h-8 text-primary" />
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#4CAF50]/10 border border-[#7EBF8E]/30 mb-2">
+              <Shield className="w-8 h-8 text-[#00E676]" />
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight">
-              Diagnóstico <span className="text-primary">360°</span>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.05] font-display">
+              Acesse seu{' '}
+              <span className="gradient-text-neon">diagnóstico</span>
             </h1>
-            <p className="text-muted-foreground">
-              Acesse a plataforma de diagnóstico financeiro
+            <p className="text-[#A0A0A0] text-base leading-relaxed">
+              Entre na plataforma para iniciar uma nova avaliação ou revisar resultados.
             </p>
           </div>
 
-          <Card className="border-border/40 shadow-md">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <LogIn className="w-5 h-5 text-primary" />
-                </div>
+          <GlassCard className="p-8 space-y-6">
+            <div className="space-y-1">
+              <span className="eyebrow-pill">
                 {isSupabaseMode ? 'Entrar' : 'Modo Local'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {!isSupabaseMode ? (
-                /* Modo Local */
-                <div className="space-y-4">
-                  <div className="rounded-lg bg-muted/50 border border-border/40 p-4 text-sm text-muted-foreground">
-                    <p className="font-medium text-foreground mb-1">
-                      Modo local — autenticação desativada
-                    </p>
-                    <p>
-                      O Supabase não está configurado. A aplicação funciona com
-                      dados locais, sem persistência no banco de dados.
-                    </p>
-                  </div>
-                  <Button
-                    onClick={handleLocalEntry}
-                    disabled={isSubmitting}
-                    className="w-full h-12 text-base font-semibold btn-glow"
-                    size="lg"
-                  >
-                    {isSubmitting ? 'Entrando...' : 'Entrar no Modo Local'}
-                  </Button>
+              </span>
+            </div>
+
+            {!isSupabaseMode ? (
+              <div className="space-y-5">
+                <div className="rounded-xl bg-white/[0.02] border border-white/8 p-4 text-sm text-[#A0A0A0]">
+                  <p className="font-semibold text-white mb-1">
+                    Autenticação desativada
+                  </p>
+                  <p className="leading-relaxed">
+                    A plataforma está rodando localmente sem persistência de banco de dados.
+                  </p>
                 </div>
-              ) : (
-                /* Modo Supabase */
-                <form onSubmit={handleLogin} className="space-y-4">
-                  {error && (
-                    <div className="flex items-center gap-2 rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-semibold">
-                      E-mail
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="h-12 text-base border-border/60 focus:border-primary"
-                    />
+                <NeonButton
+                  variant="primary"
+                  glow
+                  onClick={handleLocalEntry}
+                  disabled={isSubmitting}
+                  className="w-full text-base"
+                >
+                  {isSubmitting ? 'Entrando...' : 'Entrar no Modo Local'}
+                </NeonButton>
+              </div>
+            ) : (
+              <form onSubmit={handleLogin} className="space-y-5">
+                {error && (
+                  <div className="flex items-center gap-2 rounded-xl bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-400">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{error}</span>
                   </div>
+                )}
 
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-semibold">
-                      Senha
-                    </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Sua senha"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="h-12 text-base border-border/60 focus:border-primary"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs font-semibold text-[#A0A0A0] uppercase tracking-wider">
+                    E-mail
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="h-12 text-base lp-input"
+                  />
+                </div>
 
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full h-12 text-base font-semibold btn-glow"
-                    size="lg"
-                  >
-                    {isSubmitting ? 'Entrando...' : 'Entrar'}
-                  </Button>
-                </form>
-              )}
-            </CardContent>
-          </Card>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-xs font-semibold text-[#A0A0A0] uppercase tracking-wider">
+                    Senha
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Sua senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="h-12 text-base lp-input"
+                  />
+                </div>
 
-          {/* O2 branding footer */}
-          <p className="text-center text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">O2 Inc.</span> — CFOs as a Service
+                <NeonButton
+                  variant="primary"
+                  glow
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full text-base"
+                >
+                  {isSubmitting ? 'Entrando...' : 'Entrar'}
+                </NeonButton>
+              </form>
+            )}
+          </GlassCard>
+
+          <p className="text-center text-xs text-[#606060]">
+            <span className="font-semibold text-white">O2 Inc.</span> — CFOs as a Service
           </p>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 bg-card/60 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+      <footer className="relative z-10 border-t border-white/8">
+        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#606060]">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-primary" />
-            <span className="font-semibold text-foreground">O2 Inc.</span>
+            <Shield className="w-4 h-4 text-[#7EBF8E]" />
+            <span className="font-semibold text-white">O2 Inc.</span>
             <span>— CFOs as a Service</span>
           </div>
           <span>Porto Alegre, RS</span>

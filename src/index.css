@@ -237,6 +237,152 @@
     transform: scaleX(1);
     transform-origin: bottom left;
   }
+
+  /* ───── Landing-Page-aligned premium dark utilities ───── */
+
+  /* Section backgrounds */
+  .lp-bg            { background-color: #0A0A0A; }
+  .lp-bg-alt        { background-color: #0D0D0D; }
+
+  /* Glass surface — translucent card on dark bg */
+  .lp-glass {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    transition: border-color 300ms ease, background-color 300ms ease, transform 300ms ease;
+  }
+  .lp-glass-hover:hover {
+    border-color: rgba(126, 191, 142, 0.3);
+    background-color: rgba(126, 191, 142, 0.04);
+  }
+
+  /* Sticky header — translucent dark blur */
+  .lp-header {
+    background-color: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Eyebrow pill — uppercase label above headlines */
+  .eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(126, 191, 142, 0.3);
+    background-color: rgba(126, 191, 142, 0.08);
+    color: #7EBF8E;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .eyebrow-pill::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 9999px;
+    background-color: #4CAF50;
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+
+  /* Gradient neon text */
+  .gradient-text-neon {
+    background: linear-gradient(90deg, #7EBF8E 0%, #00E676 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Primary neon button — gradient + glow */
+  .btn-neon-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    border-radius: 1rem;
+    background: linear-gradient(90deg, #4CAF50 0%, #00E676 100%);
+    color: #0A0A0A;
+    font-weight: 800;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    box-shadow: 0 10px 30px -5px rgba(76, 175, 80, 0.4);
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+  .btn-neon-primary:hover:not(:disabled) {
+    transform: scale(1.03);
+    box-shadow: 0 15px 40px -5px rgba(0, 230, 118, 0.55);
+  }
+  .btn-neon-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Outline neon button — secondary */
+  .btn-neon-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    background-color: transparent;
+    font-weight: 600;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    transition: border-color 300ms ease, background-color 300ms ease;
+  }
+  .btn-neon-outline:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  /* Ghost outline — verde sutil (ex: "Já comprei") */
+  .btn-neon-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(126, 191, 142, 0.4);
+    color: #7EBF8E;
+    background-color: transparent;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 300ms ease;
+  }
+  .btn-neon-ghost:hover:not(:disabled) {
+    background-color: rgba(126, 191, 142, 0.1);
+    border-color: rgba(126, 191, 142, 0.6);
+  }
+
+  /* Surface for inputs on dark bg */
+  .lp-input {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    transition: border-color 200ms ease, background-color 200ms ease;
+  }
+  .lp-input::placeholder { color: #606060; }
+  .lp-input:focus {
+    border-color: rgba(0, 230, 118, 0.5);
+    background-color: rgba(255, 255, 255, 0.05);
+    outline: none;
+  }
+
+  /* Section subtle background grid (hero-style) */
+  .lp-grid-bg {
+    background-image:
+      linear-gradient(rgba(126, 191, 142, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(126, 191, 142, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
 }
 
 /* ────────────────────────────────────────────────────────
