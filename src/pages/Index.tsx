@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { GlassCard } from "@/components/ui/glass-card";
+import { NeonButton } from "@/components/ui/neon-button";
 import {
   Shield,
   BarChart3,
@@ -27,7 +25,7 @@ const features = [
   {
     icon: FileText,
     title: "48 Perguntas Especializadas",
-    desc: "Cada pergunta com 5 opções de resposta descritivas para avaliação precisa",
+    desc: "Cada pergunta com 5 opções descritivas para avaliação precisa",
   },
   {
     icon: Shield,
@@ -37,26 +35,10 @@ const features = [
 ];
 
 const steps = [
-  {
-    number: 1,
-    icon: Building2,
-    text: "Informe o nome da empresa",
-  },
-  {
-    number: 2,
-    icon: ClipboardCheck,
-    text: "Responda as 48 perguntas do diagnóstico",
-  },
-  {
-    number: 3,
-    icon: BarChart3,
-    text: "Receba o score de maturidade e riscos identificados",
-  },
-  {
-    number: 4,
-    icon: TrendingUp,
-    text: "Obtenha quick wins e planos de ação detalhados",
-  },
+  { number: 1, icon: Building2, text: "Informe o nome da empresa" },
+  { number: 2, icon: ClipboardCheck, text: "Responda as 48 perguntas do diagnóstico" },
+  { number: 3, icon: BarChart3, text: "Receba o score de maturidade e riscos identificados" },
+  { number: 4, icon: TrendingUp, text: "Obtenha quick wins e planos de ação detalhados" },
 ];
 
 export default function Index() {
@@ -70,165 +52,153 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen lp-bg text-white flex flex-col">
       {/* Header */}
-      <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="lp-header sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Shield className="w-7 h-7 text-primary" />
-            <span className="text-lg font-bold tracking-tight">O2 Inc</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center">
+              <span className="text-[#0A0A0A] font-black text-xs">O2</span>
+            </div>
+            <span className="text-sm font-bold tracking-tight">
+              Diagnóstico <span className="gradient-text-neon">360°</span>
+            </span>
           </div>
-          <Badge variant="secondary" className="text-xs">
-            CFOs as a Service
-          </Badge>
+          <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
         </div>
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="px-6 py-16 md:py-24 hero-gradient">
-          <div className="max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-            <Badge className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border-transparent hover:bg-primary/10">
-              <Shield className="w-3.5 h-3.5 mr-1.5" />
-              Plataforma de Diagnóstico Financeiro
-            </Badge>
+        {/* Hero */}
+        <section className="relative px-6 pt-20 pb-16 overflow-hidden">
+          <div className="absolute inset-0 lp-grid-bg pointer-events-none opacity-60" />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,230,118,0.12) 0%, transparent 60%)',
+            }}
+          />
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+          <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
+            <span className="eyebrow-pill">Plataforma de Diagnóstico Financeiro</span>
+
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] font-display">
               Diagnóstico{" "}
-              <span className="text-primary">360°</span>
+              <span className="gradient-text-neon">360°</span>
             </h1>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-primary/80">
-              Avaliação de Maturidade Financeira
-            </h2>
-
-            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-[#A0A0A0] max-w-2xl mx-auto leading-relaxed">
               Avalie a maturidade financeira da empresa em{" "}
-              <span className="font-semibold text-foreground">6 áreas estratégicas</span>{" "}
+              <strong className="text-white font-semibold">6 áreas estratégicas</strong>{" "}
               com{" "}
-              <span className="font-semibold text-foreground">54 perguntas especializadas</span>
+              <strong className="text-white font-semibold">54 perguntas especializadas</strong>.
             </p>
           </div>
         </section>
 
-        {/* Company Name Input */}
-        <section className="px-6 pb-16 animate-slide-up" style={{ animationDelay: "0.15s" }}>
-          <Card className="max-w-md mx-auto border-border/40 shadow-sm hover:shadow-md transition-shadow duration-300">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-primary" />
-                </div>
-                Iniciar Diagnóstico
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="company-name" className="text-sm font-semibold">
-                  Nome da Empresa
-                </Label>
-                <Input
-                  id="company-name"
-                  placeholder="Ex: Empresa ABC Ltda"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleStart()}
-                  className="h-12 text-base border-border/60 focus:border-primary"
-                />
-              </div>
-              <Button
+        {/* Iniciar Diagnóstico */}
+        <section className="px-6 pb-20">
+          <GlassCard className="max-w-md mx-auto p-7 space-y-5 animate-slide-up">
+            <div className="space-y-1">
+              <span className="eyebrow-pill">Iniciar Diagnóstico</span>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="company-name" className="text-xs font-semibold text-[#A0A0A0] uppercase tracking-wider">
+                Nome da Empresa
+              </Label>
+              <Input
+                id="company-name"
+                placeholder="Ex: Empresa ABC Ltda"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleStart()}
+                className="h-12 text-base lp-input"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <NeonButton
+                variant="primary"
+                glow
                 onClick={handleStart}
                 disabled={!companyName.trim()}
-                className="w-full h-12 px-8 text-base font-semibold btn-glow"
-                size="lg"
+                className="w-full"
               >
                 Iniciar Diagnóstico
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button
+                <ArrowRight className="w-4 h-4" />
+              </NeonButton>
+
+              <NeonButton
+                variant="outline"
                 onClick={() => {
                   if (companyName.trim()) {
                     navigate("/apresentacao", { state: { companyName: companyName.trim() } });
                   }
                 }}
                 disabled={!companyName.trim()}
-                variant="outline"
-                className="w-full h-11 px-8 text-sm font-semibold border-border/60 hover:border-primary/40 hover:bg-primary/5"
-                size="lg"
+                className="w-full text-sm py-3"
               >
-                <Monitor className="w-4 h-4 mr-2" />
+                <Monitor className="w-4 h-4" />
                 Iniciar em Modo Apresentação
-              </Button>
-            </CardContent>
-          </Card>
+              </NeonButton>
+            </div>
+          </GlassCard>
         </section>
 
-        <Separator className="max-w-6xl mx-auto" />
-
-        {/* Feature Highlights Grid */}
-        <section className="px-6 py-16">
-          <div className="max-w-6xl mx-auto space-y-10">
-            <div className="text-center space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
-                O que compõe o diagnóstico
-              </h3>
-              <p className="text-muted-foreground">
-                Uma avaliação completa da maturidade financeira da sua empresa
-              </p>
+        {/* Features */}
+        <section className="lp-bg-alt border-y border-white/8 px-6 py-20">
+          <div className="max-w-6xl mx-auto space-y-12">
+            <div className="text-center space-y-3">
+              <span className="eyebrow-pill">O que compõe</span>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight font-display">
+                Avaliação <span className="gradient-text-neon">completa</span> da maturidade
+              </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-stagger">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-stagger">
               {features.map((f) => (
-                <Card
+                <GlassCard
                   key={f.title}
-                  className="rounded-xl border-border/40 shadow-sm hover:shadow-lg hover:border-primary/30 hover:-translate-y-1 transition-all duration-300"
+                  interactive
+                  className="p-6 text-center space-y-4"
                 >
-                  <CardContent className="p-6 text-center space-y-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                      <f.icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <h4 className="font-bold text-lg">{f.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {f.desc}
-                    </p>
-                  </CardContent>
-                </Card>
+                  <div className="w-12 h-12 rounded-xl bg-[#4CAF50]/10 border border-[#7EBF8E]/20 flex items-center justify-center mx-auto">
+                    <f.icon className="w-6 h-6 text-[#00E676]" />
+                  </div>
+                  <h3 className="font-bold text-base text-white">{f.title}</h3>
+                  <p className="text-sm text-[#A0A0A0] leading-relaxed">{f.desc}</p>
+                </GlassCard>
               ))}
             </div>
           </div>
         </section>
 
-        <Separator className="max-w-6xl mx-auto" />
-
-        {/* How It Works Section */}
-        <section className="px-6 py-16">
-          <div className="max-w-4xl mx-auto space-y-10">
-            <div className="text-center space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
-                Como funciona
-              </h3>
-              <p className="text-muted-foreground">
-                4 passos simples para um diagnóstico completo
-              </p>
+        {/* How it works */}
+        <section className="px-6 py-20">
+          <div className="max-w-5xl mx-auto space-y-12">
+            <div className="text-center space-y-3">
+              <span className="eyebrow-pill">Como funciona</span>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight font-display">
+                4 passos para um <span className="gradient-text-neon">diagnóstico completo</span>
+              </h2>
             </div>
 
-            <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Connecting line (desktop only) */}
-              <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-primary/10 via-primary/40 to-primary/10 z-0" />
-
+            <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="hidden lg:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-[#7EBF8E]/30 to-transparent z-0" />
               {steps.map((step) => (
-                <div
+                <GlassCard
                   key={step.number}
-                  className="relative flex flex-col items-center text-center space-y-3 p-6 rounded-xl bg-card border border-border/40 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 z-[1]"
+                  interactive
+                  className="relative z-[1] flex flex-col items-center text-center p-6 space-y-3"
                 >
-                  <div className="relative z-10 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-md ring-4 ring-background">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4CAF50] to-[#00E676] text-[#0A0A0A] flex items-center justify-center font-black text-sm shadow-lg shadow-[#4CAF50]/30">
                     {step.number}
                   </div>
-                  <step.icon className="w-6 h-6 text-primary/60" />
-                  <p className="text-sm font-medium leading-relaxed">
-                    {step.text}
-                  </p>
-                </div>
+                  <step.icon className="w-5 h-5 text-[#7EBF8E]" />
+                  <p className="text-sm font-medium text-white leading-relaxed">{step.text}</p>
+                </GlassCard>
               ))}
             </div>
           </div>
@@ -236,13 +206,11 @@ export default function Index() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 bg-card/60 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+      <footer className="lp-bg-alt border-t border-white/8">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#606060]">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-primary" />
-            <span className="font-semibold text-foreground">
-              O2 Inc.
-            </span>
+            <Shield className="w-4 h-4 text-[#7EBF8E]" />
+            <span className="font-semibold text-white">O2 Inc.</span>
             <span>— CFOs as a Service</span>
           </div>
           <span>Porto Alegre, RS</span>
