@@ -9,6 +9,7 @@ import Questionnaire from "./pages/Questionnaire.tsx";
 import Results from "./pages/Results.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import PresentationMode from "./pages/PresentationMode.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -42,7 +43,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 const AppRoutes = () => (
   <Routes>
-    {/* Rota pública */}
+    {/* Rotas públicas */}
+    <Route path="/landing" element={<LandingPage />} />
     <Route path="/login" element={<LoginPage />} />
 
     {/* Rotas protegidas */}
