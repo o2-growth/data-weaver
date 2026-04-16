@@ -283,6 +283,22 @@ export default function Results() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, []);
 
+  const filteredRisks = useMemo(() => {
+    if (!result) return [];
+    const sorted = [...result.identifiedRisks].sort((a, b) => b.riskScore - a.riskScore);
+    if (riskFilter === "Todos") return sorted;
+    return sorted.filter((r) => r.riskCategory === riskFilter);
+  }, [result, riskFilter]);
+
+  const questionsByArea = useMemo(() => {
+    const map: Record<string, typeof questions> = {};
+    if (!result) return map;
+    for (const area of result.areaScores) {
+      map[area.areaId] = questions.filter((q) => q.areaId === area.areaId);
+    }
+    return map;
+  }, [result]);
+
   if (!result) {
     return (
       <div className="min-h-screen lp-bg text-white flex items-center justify-center">
@@ -299,20 +315,6 @@ export default function Results() {
     score: a.score,
     fullMark: 5,
   }));
-
-  const filteredRisks = useMemo(() => {
-    const sorted = [...result.identifiedRisks].sort((a, b) => b.riskScore - a.riskScore);
-    if (riskFilter === "Todos") return sorted;
-    return sorted.filter((r) => r.riskCategory === riskFilter);
-  }, [result.identifiedRisks, riskFilter]);
-
-  const questionsByArea = useMemo(() => {
-    const map: Record<string, typeof questions> = {};
-    for (const area of result.areaScores) {
-      map[area.areaId] = questions.filter((q) => q.areaId === area.areaId);
-    }
-    return map;
-  }, [result.areaScores]);
 
   const formattedDate = new Date(result.datePerformed).toLocaleDateString("pt-BR", {
     day: "2-digit",
