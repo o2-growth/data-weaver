@@ -372,7 +372,7 @@ export default function PresentationMode() {
             <span className="text-[#0A0A0A] font-black text-[10px]">O2</span>
           </div>
           <span className="text-sm font-bold tracking-tight">
-            Diagnóstico <span className="gradient-text-neon">360°</span>
+            Grau de <span className="gradient-text-neon">Maturidade</span>
           </span>
           <span className="text-xs text-[#7EBF8E] hidden sm:inline">
             — {session.companyName}

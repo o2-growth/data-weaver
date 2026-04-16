@@ -19,18 +19,18 @@ import {
 const features = [
   {
     icon: Target,
-    title: "5 Áreas Estratégicas",
-    desc: "Contabilidade, Financeiro, Controladoria, Fiscal e Planejamento",
+    title: "6 Áreas Estratégicas",
+    desc: "Contabilidade, Controladoria, Financeiro, Fiscal, Planejamento e Comercial",
   },
   {
     icon: FileText,
-    title: "48 Perguntas Especializadas",
-    desc: "Cada pergunta com 5 opções descritivas para avaliação precisa",
+    title: "54 Perguntas Especializadas",
+    desc: "Cada pergunta com 5 opções descritivas para avaliação precisa do grau de maturidade",
   },
   {
     icon: Shield,
     title: "Matriz de Risco",
-    desc: "240 análises de risco pré-configuradas com controles e planos de ação",
+    desc: "270 análises de risco pré-configuradas com controles e planos de ação",
   },
 ];
 
@@ -61,7 +61,7 @@ export default function Index() {
               <span className="text-[#0A0A0A] font-black text-xs">O2</span>
             </div>
             <span className="text-sm font-bold tracking-tight">
-              Diagnóstico <span className="gradient-text-neon">360°</span>
+              Grau de <span className="gradient-text-neon">Maturidade</span>
             </span>
           </div>
           <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
@@ -81,11 +81,11 @@ export default function Index() {
           />
 
           <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-            <span className="eyebrow-pill">Plataforma de Diagnóstico Financeiro</span>
+            <span className="eyebrow-pill">Plataforma de Avaliação Financeira</span>
 
             <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] font-display">
-              Diagnóstico{" "}
-              <span className="gradient-text-neon">360°</span>
+              Grau de{" "}
+              <span className="gradient-text-neon">Maturidade</span>
             </h1>
 
             <p className="text-lg md:text-xl text-[#A0A0A0] max-w-2xl mx-auto leading-relaxed">

@@ -3,9 +3,9 @@ import { useScrollRevealSlide } from "@/hooks/useScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 
 const deliverables = [
-  "Score de maturidade de 1 a 5 em cada uma das 10 áreas",
-  "Mapa de calor com riscos críticos priorizados",
-  "Lista de quick wins (esforço × impacto) prontos para execução",
+  "Grau de maturidade de 1 a 5 em cada uma das 6 áreas",
+  "Mapa de risco com 270 análises pré-configuradas, ordenadas por criticidade",
+  "Lista de quick wins prontos para execução por área",
   "Relatório executivo em PDF com identidade da O2 Inc",
   "Apresentação PowerPoint editável para o board",
   "Modo apresentação interativo para a reunião de devolutiva",
@@ -45,11 +45,12 @@ export function LPResults() {
 
             <div className="space-y-3">
               {[
-                { label: "Financeiro", v: 78, color: "#7EBF8E" },
-                { label: "Comercial", v: 64, color: "#61AAF2" },
-                { label: "Controladoria", v: 52, color: "#F59E0B" },
-                { label: "Fiscal", v: 41, color: "#EF4444" },
-                { label: "Tecnologia", v: 70, color: "#8989DE" },
+                { label: "Contabilidade", v: 72, color: "#7EBF8E" },
+                { label: "Controladoria", v: 58, color: "#F59E0B" },
+                { label: "Financeiro", v: 80, color: "#00E676" },
+                { label: "Fiscal", v: 44, color: "#EF4444" },
+                { label: "Planejamento", v: 50, color: "#8989DE" },
+                { label: "Comercial", v: 66, color: "#61AAF2" },
               ].map((row) => (
                 <div key={row.label}>
                   <div className="flex items-center justify-between text-xs mb-1.5">

@@ -71,7 +71,7 @@ export default function LoginPage() {
               <span className="text-[#0A0A0A] font-black text-xs">O2</span>
             </div>
             <span className="text-sm font-bold tracking-tight">
-              Diagnóstico <span className="gradient-text-neon">360°</span>
+              Grau de <span className="gradient-text-neon">Maturidade</span>
             </span>
           </div>
           <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
@@ -87,11 +87,11 @@ export default function LoginPage() {
               <Shield className="w-8 h-8 text-[#00E676]" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.05] font-display">
-              Acesse seu{' '}
-              <span className="gradient-text-neon">diagnóstico</span>
+              Acesse a{' '}
+              <span className="gradient-text-neon">plataforma</span>
             </h1>
             <p className="text-[#A0A0A0] text-base leading-relaxed">
-              Entre na plataforma para iniciar uma nova avaliação ou revisar resultados.
+              Entre para iniciar uma nova avaliação de maturidade ou revisar resultados.
             </p>
           </div>
 

@@ -37,13 +37,13 @@ export function LPNavbar() {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-2.5 group"
-          aria-label="Diagnóstico 360"
+          aria-label="Grau de Maturidade"
         >
           <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center text-[#0A0A0A] font-black text-xs">
             O2
           </span>
           <span className="font-display font-bold text-white text-base tracking-tight">
-            Diagnóstico <span className="text-[#00E676]">360</span>
+            Grau de <span className="text-[#00E676]">Maturidade</span>
           </span>
         </button>
 

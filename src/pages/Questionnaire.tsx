@@ -163,9 +163,9 @@ export default function Questionnaire() {
                 <Building2 className="w-8 h-8 text-[#00E676]" />
               </div>
             </div>
-            <span className="eyebrow-pill">Iniciar Diagnóstico</span>
+            <span className="eyebrow-pill">Iniciar Avaliação</span>
             <h1 className="text-3xl font-black tracking-tight font-display">
-              Diagnóstico <span className="gradient-text-neon">360°</span>
+              Grau de <span className="gradient-text-neon">Maturidade</span>
             </h1>
             <p className="text-sm text-[#A0A0A0]">
               Informe o nome da empresa para iniciar
@@ -212,7 +212,7 @@ export default function Questionnaire() {
                 <span className="text-[#0A0A0A] font-black text-[10px]">O2</span>
               </div>
               <span className="text-sm font-bold tracking-tight truncate">
-                Diagnóstico <span className="gradient-text-neon">360°</span>
+                Grau de <span className="gradient-text-neon">Maturidade</span>
               </span>
               <span className="hidden sm:inline text-xs text-[#7EBF8E] truncate">— {companyName}</span>
             </div>

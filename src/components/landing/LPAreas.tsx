@@ -1,30 +1,52 @@
 import {
-  Building2,
-  Cpu,
-  ShoppingCart,
-  Megaphone,
-  DollarSign,
-  PieChart,
-  Receipt,
   BookOpen,
-  Users,
+  PieChart,
+  DollarSign,
+  Receipt,
   Target,
+  ShoppingCart,
   type LucideIcon,
 } from "lucide-react";
 import { TiltCard } from "./TiltCard";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const areas: { icon: LucideIcon; title: string; body: string }[] = [
-  { icon: Building2, title: "Societário", body: "Estrutura jurídica, governança e participações." },
-  { icon: Cpu, title: "Tecnologia", body: "Sistemas, integrações e maturidade digital." },
-  { icon: ShoppingCart, title: "Comercial", body: "Funil, pricing, performance da equipe de vendas." },
-  { icon: Megaphone, title: "Marketing", body: "Posicionamento, geração de demanda e métricas." },
-  { icon: DollarSign, title: "Financeiro", body: "Caixa, capital de giro e saúde financeira." },
-  { icon: PieChart, title: "Controladoria", body: "Indicadores, orçamento e análise de resultado." },
-  { icon: Receipt, title: "Fiscal", body: "Tributação, créditos e conformidade." },
-  { icon: BookOpen, title: "Contábil", body: "Demonstrações, fechamento e auditoria." },
-  { icon: Users, title: "Capital Humano", body: "Talentos, clima, retenção e remuneração." },
-  { icon: Target, title: "Planejamento", body: "Estratégia, metas e gestão de OKRs." },
+const areas: { icon: LucideIcon; title: string; weight: string; body: string }[] = [
+  {
+    icon: BookOpen,
+    title: "Contabilidade",
+    weight: "15%",
+    body: "Estrutura contábil, fechamento mensal e confiabilidade dos demonstrativos.",
+  },
+  {
+    icon: PieChart,
+    title: "Controladoria",
+    weight: "25%",
+    body: "Margens, capital de giro, endividamento e estrutura de custos.",
+  },
+  {
+    icon: DollarSign,
+    title: "Financeiro",
+    weight: "25%",
+    body: "Controle de caixa e maturidade dos processos financeiros.",
+  },
+  {
+    icon: Receipt,
+    title: "Fiscal",
+    weight: "15%",
+    body: "Conformidade tributária e estratégia de planejamento fiscal.",
+  },
+  {
+    icon: Target,
+    title: "Planejamento",
+    weight: "10%",
+    body: "Indicadores de performance, orçamento e forecast.",
+  },
+  {
+    icon: ShoppingCart,
+    title: "Comercial",
+    weight: "10%",
+    body: "Gestão de pipeline, funil de vendas e precificação rentável.",
+  },
 ];
 
 export function LPAreas() {
@@ -34,21 +56,22 @@ export function LPAreas() {
       <div ref={ref} className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E] mb-3">
-            10 áreas avaliadas
+            6 áreas avaliadas
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-white">
             Um raio-X{" "}
             <span className="bg-gradient-to-r from-[#7EBF8E] to-[#00E676] bg-clip-text text-transparent">
-              360° do negócio.
+              financeiro do negócio.
             </span>
           </h2>
           <p className="mt-4 text-[#A0A0A0] max-w-2xl mx-auto">
-            Cada área recebe um score de maturidade de 1 a 5, com riscos
-            mapeados e quick wins recomendados.
+            Cada área recebe um grau de maturidade de 1 a 5, com riscos
+            mapeados e quick wins recomendados — pesos baseados no impacto real
+            da área na saúde financeira.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {areas.map((a, i) => {
             const Icon = a.icon;
             return (
@@ -60,12 +83,17 @@ export function LPAreas() {
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <TiltCard className="h-full">
-                  <div className="h-full p-5 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-[#7EBF8E]/30 hover:bg-[#7EBF8E]/[0.04] transition-colors">
-                    <span className="inline-flex w-10 h-10 rounded-xl bg-[#4CAF50]/10 items-center justify-center mb-4">
-                      <Icon className="w-4.5 h-4.5 text-[#7EBF8E]" strokeWidth={2.2} />
-                    </span>
-                    <h3 className="text-white font-bold text-sm mb-1.5">{a.title}</h3>
-                    <p className="text-[#606060] text-xs leading-relaxed">{a.body}</p>
+                  <div className="h-full p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-[#7EBF8E]/30 hover:bg-[#7EBF8E]/[0.04] transition-colors">
+                    <div className="flex items-start justify-between mb-4">
+                      <span className="inline-flex w-11 h-11 rounded-xl bg-[#4CAF50]/10 items-center justify-center">
+                        <Icon className="w-5 h-5 text-[#7EBF8E]" strokeWidth={2.2} />
+                      </span>
+                      <span className="px-2.5 py-1 rounded-full border border-[#7EBF8E]/25 bg-[#7EBF8E]/[0.06] text-[#7EBF8E] text-[10px] font-bold tracking-wider uppercase">
+                        Peso {a.weight}
+                      </span>
+                    </div>
+                    <h3 className="text-white font-bold text-base mb-1.5">{a.title}</h3>
+                    <p className="text-[#606060] text-sm leading-relaxed">{a.body}</p>
                   </div>
                 </TiltCard>
               </div>
