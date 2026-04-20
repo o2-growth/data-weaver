@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { FloatingParticles } from "./FloatingParticles";
 import { useMouseGlow } from "@/hooks/useMouseGlow";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
+import { useCheckout } from "@/hooks/useCheckout";
 
 function Stat({ value, suffix = "", prefix = "", label }: { value: number; suffix?: string; prefix?: string; label: string }) {
   const { ref, value: v } = useCountUp(value, 2000);
@@ -20,7 +20,7 @@ function Stat({ value, suffix = "", prefix = "", label }: { value: number; suffi
 }
 
 export function LPHero() {
-  const navigate = useNavigate();
+  const { startCheckout, CheckoutDialog } = useCheckout();
   const { ref: glowRef, pos } = useMouseGlow<HTMLElement>();
   const { ref: contentRef, visible } = useScrollReveal<HTMLDivElement>({ threshold: 0 });
 
@@ -91,10 +91,10 @@ export function LPHero() {
         {/* CTAs */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={() => navigate("/login")}
+            onClick={startCheckout}
             className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.03] transition-all animate-glow-pulse"
           >
-            Fazer o Diagnóstico →
+            Obter Grau de Maturidade →
           </button>
           <button
             onClick={() => {
@@ -126,6 +126,7 @@ export function LPHero() {
       >
         <ChevronDown className="w-6 h-6" />
       </button>
+      {CheckoutDialog}
     </section>
   );
 }

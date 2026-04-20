@@ -1,6 +1,6 @@
 import { Check, Shield } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useCheckout } from "@/hooks/useCheckout";
 
 const benefits = [
   "Avaliação completa das 6 áreas estratégicas (54 perguntas)",
@@ -12,7 +12,7 @@ const benefits = [
 ];
 
 export function LPPricing() {
-  const navigate = useNavigate();
+  const { startCheckout, CheckoutDialog } = useCheckout();
   const { ref, visible } = useScrollReveal<HTMLDivElement>();
 
   return (
@@ -37,7 +37,7 @@ export function LPPricing() {
 
         <div className="relative p-8 md:p-10 rounded-3xl border border-[#7EBF8E]/20 bg-gradient-to-b from-white/[0.03] to-white/[0.01] animate-glow-pulse">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] text-xs font-black uppercase tracking-wider">
-            Plano Único
+            Acesso Completo
           </div>
 
           <ul className="space-y-3 mb-8 mt-4">
@@ -52,18 +52,19 @@ export function LPPricing() {
           </ul>
 
           <button
-            onClick={() => navigate("/login")}
+            onClick={startCheckout}
             className="w-full px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.02] transition-all"
           >
-            Começar agora →
+            Obter Grau de Maturidade →
           </button>
 
           <div className="mt-6 flex items-center justify-center gap-2 text-[#606060] text-xs">
             <Shield className="w-3.5 h-3.5 text-[#7EBF8E]" />
-            <span>Acesso completo após cadastro</span>
+            <span>Acesso liberado após o pagamento</span>
           </div>
         </div>
       </div>
+      {CheckoutDialog}
     </section>
   );
 }
