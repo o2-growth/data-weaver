@@ -9,6 +9,7 @@ import { LPTestimonials } from "@/components/landing/LPTestimonials";
 import { LPPricing } from "@/components/landing/LPPricing";
 import { LPFAQ } from "@/components/landing/LPFAQ";
 import { LPFooter } from "@/components/landing/LPFooter";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 
 /**
  * Public landing page — dark premium, neon green accent.
@@ -29,6 +30,7 @@ export default function LandingPage() {
 
   return (
     <main className="bg-[#0A0A0A] text-white min-h-screen font-sans">
+      <PaymentTestModeBanner />
       <h1 className="sr-only">Grau de Maturidade — O2 Inc</h1>
       <LPNavbar />
       <LPHero />
