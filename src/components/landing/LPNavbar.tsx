@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCheckout } from "@/hooks/useCheckout";
 
 const links = [
   { id: "como-funciona", label: "Como funciona" },
@@ -11,6 +12,7 @@ const links = [
 export function LPNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { startCheckout, CheckoutDialog } = useCheckout();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -69,13 +71,14 @@ export function LPNavbar() {
             Já comprei
           </button>
           <button
-            onClick={() => navigate("/login")}
+            onClick={startCheckout}
             className="px-5 py-2 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] text-sm font-bold hover:scale-[1.03] transition-transform shadow-lg shadow-[#4CAF50]/20"
           >
-            Começar
+            Obter Grau de Maturidade
           </button>
         </div>
       </div>
+      {CheckoutDialog}
     </nav>
   );
 }

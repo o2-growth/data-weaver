@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
+import { useCheckout } from "@/hooks/useCheckout";
 
 export function LPFooter() {
-  const navigate = useNavigate();
+  const { startCheckout, CheckoutDialog } = useCheckout();
   return (
     <footer className="relative bg-[#0A0A0A] border-t border-white/[0.06]">
       {/* Final CTA strip */}
@@ -17,10 +17,10 @@ export function LPFooter() {
           ~30 minutos agora podem mudar a próxima década do seu negócio.
         </p>
         <button
-          onClick={() => navigate("/login")}
+          onClick={startCheckout}
           className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.03] transition-all animate-glow-pulse"
         >
-          Avaliar minha empresa →
+          Obter Grau de Maturidade →
         </button>
       </div>
 
@@ -44,6 +44,7 @@ export function LPFooter() {
           </a>
         </div>
       </div>
+      {CheckoutDialog}
     </footer>
   );
 }
