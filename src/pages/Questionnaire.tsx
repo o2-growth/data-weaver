@@ -19,6 +19,7 @@ import {
   Monitor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { saveDiagnosticResult } from "@/lib/diagnosticStorage";
 
 export default function Questionnaire() {
   const location = useLocation();
@@ -149,6 +150,7 @@ export default function Questionnaire() {
   const handleFinish = () => {
     const result = completeDiagnostic();
     if (result) {
+      saveDiagnosticResult(result);
       navigate("/resultados", { state: { result } });
     }
   };
