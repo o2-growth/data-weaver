@@ -25,20 +25,25 @@ import { getMaturityInfo } from "@/lib/calculations";
 // ────────────────────────────────────────────────────────────
 
 const COLORS = {
-  primary: "#1e3a5f",
-  primaryLight: "#2c5282",
-  accent: "#3182ce",
+  // O2 Brand — Dark Premium + Neon Green
+  primary: "#0A0A0A",        // black bg (capa/divisor)
+  primaryLight: "#1A1A1A",
+  accent: "#00E676",         // neon green
+  accentSoft: "#7EBF8E",     // sage green (subtítulos)
+  accentDark: "#4CAF50",
   white: "#ffffff",
-  lightGray: "#f7f8fa",
-  mediumGray: "#e2e8f0",
-  darkGray: "#4a5568",
-  text: "#1a202c",
-  textLight: "#718096",
+  lightGray: "#F5F5F5",
+  mediumGray: "#E5E5E5",
+  borderGray: "#D4D4D4",
+  darkGray: "#404040",
+  text: "#0A0A0A",
+  textLight: "#737373",
+  // Mantém escala de notas (legibilidade)
   grade1: "#DC2626",
   grade2: "#F97316",
   grade3: "#EAB308",
   grade4: "#22C55E",
-  grade5: "#3B82F6",
+  grade5: "#00E676",
 };
 
 function getGradeColor(grade: number): string {
