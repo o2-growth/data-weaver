@@ -426,22 +426,27 @@ function PageFooter() {
 
 function CoverPage({ result }: { result: DiagnosticResult }) {
   return (
-    <Page size="A4" style={[styles.page, { paddingTop: 40, paddingBottom: 40 }]}>
+    <Page size="A4" style={styles.coverPage}>
       <View style={styles.coverContainer}>
+        <View style={styles.coverLogoCircle}>
+          <Text style={styles.coverLogoText}>O2</Text>
+        </View>
         <Text style={styles.coverBrand}>O2 INC.</Text>
-        <Text style={{ fontSize: 9, color: COLORS.textLight, marginBottom: 6 }}>
+        <Text style={{ fontSize: 9, color: COLORS.accentSoft, marginBottom: 6, letterSpacing: 1 }}>
           CFOs as a Service
         </Text>
         <View style={styles.coverDivider} />
-        <Text style={styles.coverTitle}>Diagnostico 360</Text>
+        <Text style={styles.coverTitle}>
+          Grau de <Text style={styles.coverTitleAccent}>Maturidade</Text>
+        </Text>
         <Text style={styles.coverSubtitle}>
-          Relatorio de Maturidade Financeira
+          Diagnóstico Financeiro 360°
         </Text>
         <View style={[styles.coverDivider, { width: 40, marginVertical: 12 }]} />
         <Text style={styles.coverCompany}>{result.companyName}</Text>
         <Text style={styles.coverDate}>{formatDate(result.datePerformed)}</Text>
         <Text style={styles.coverConfidential}>
-          Confidencial - Preparado por O2 Inc.
+          Confidencial — Preparado por O2 Inc.
         </Text>
       </View>
     </Page>
