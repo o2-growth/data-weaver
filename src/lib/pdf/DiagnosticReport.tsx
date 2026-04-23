@@ -138,48 +138,73 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
   },
 
-  // Cover page
+  // Cover page (dark)
+  coverPage: {
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingHorizontal: 40,
+    fontFamily: "Helvetica",
+    backgroundColor: COLORS.primary,
+    color: COLORS.white,
+  },
   coverContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  coverBrand: {
-    fontSize: 14,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.primary,
-    letterSpacing: 3,
-    marginBottom: 8,
-  },
-  coverDivider: {
-    width: 80,
-    height: 2,
+  coverLogoCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: COLORS.accent,
-    marginVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 18,
   },
-  coverTitle: {
-    fontSize: 28,
+  coverLogoText: {
+    fontSize: 22,
     fontFamily: "Helvetica-Bold",
     color: COLORS.primary,
-    textAlign: "center",
+  },
+  coverBrand: {
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: COLORS.accentSoft,
+    letterSpacing: 4,
     marginBottom: 6,
   },
+  coverDivider: {
+    width: 60,
+    height: 2,
+    backgroundColor: COLORS.accent,
+    marginVertical: 18,
+  },
+  coverTitle: {
+    fontSize: 32,
+    fontFamily: "Helvetica-Bold",
+    color: COLORS.white,
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  coverTitleAccent: {
+    color: COLORS.accent,
+  },
   coverSubtitle: {
-    fontSize: 14,
-    color: COLORS.darkGray,
+    fontSize: 13,
+    color: COLORS.accentSoft,
     textAlign: "center",
     marginBottom: 30,
   },
   coverCompany: {
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: "Helvetica-Bold",
-    color: COLORS.primaryLight,
+    color: COLORS.white,
     textAlign: "center",
     marginBottom: 10,
   },
   coverDate: {
     fontSize: 11,
-    color: COLORS.textLight,
+    color: COLORS.accentSoft,
     textAlign: "center",
     marginBottom: 40,
   },
