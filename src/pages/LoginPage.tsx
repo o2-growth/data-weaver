@@ -21,7 +21,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -30,7 +30,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login(email, password);
-      navigate('/', { replace: true });
+      navigate('/app', { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
@@ -42,7 +42,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login('', '');
-      navigate('/', { replace: true });
+      navigate('/app', { replace: true });
     } catch {
       setError('Erro ao entrar no modo local');
     } finally {
