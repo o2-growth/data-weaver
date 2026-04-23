@@ -25,20 +25,25 @@ import { getMaturityInfo } from "@/lib/calculations";
 // ────────────────────────────────────────────────────────────
 
 const COLORS = {
-  primary: "#1e3a5f",
-  primaryLight: "#2c5282",
-  accent: "#3182ce",
+  // O2 Brand — Dark Premium + Neon Green
+  primary: "#0A0A0A",        // black bg (capa/divisor)
+  primaryLight: "#1A1A1A",
+  accent: "#00E676",         // neon green
+  accentSoft: "#7EBF8E",     // sage green (subtítulos)
+  accentDark: "#4CAF50",
   white: "#ffffff",
-  lightGray: "#f7f8fa",
-  mediumGray: "#e2e8f0",
-  darkGray: "#4a5568",
-  text: "#1a202c",
-  textLight: "#718096",
+  lightGray: "#F5F5F5",
+  mediumGray: "#E5E5E5",
+  borderGray: "#D4D4D4",
+  darkGray: "#404040",
+  text: "#0A0A0A",
+  textLight: "#737373",
+  // Mantém escala de notas (legibilidade)
   grade1: "#DC2626",
   grade2: "#F97316",
   grade3: "#EAB308",
   grade4: "#22C55E",
-  grade5: "#3B82F6",
+  grade5: "#00E676",
 };
 
 function getGradeColor(grade: number): string {
@@ -125,56 +130,86 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: COLORS.mediumGray,
+    borderTopColor: COLORS.accent,
     paddingTop: 6,
   },
   pageFooterText: {
     fontSize: 7,
     color: COLORS.textLight,
   },
+  pageFooterBrand: {
+    fontSize: 7,
+    color: COLORS.accentDark,
+    fontFamily: "Helvetica-Bold",
+  },
 
-  // Cover page
+  // Cover page (dark)
+  coverPage: {
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingHorizontal: 40,
+    fontFamily: "Helvetica",
+    backgroundColor: COLORS.primary,
+    color: COLORS.white,
+  },
   coverContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  coverBrand: {
-    fontSize: 14,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.primary,
-    letterSpacing: 3,
-    marginBottom: 8,
-  },
-  coverDivider: {
-    width: 80,
-    height: 2,
+  coverLogoCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: COLORS.accent,
-    marginVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 18,
   },
-  coverTitle: {
-    fontSize: 28,
+  coverLogoText: {
+    fontSize: 22,
     fontFamily: "Helvetica-Bold",
     color: COLORS.primary,
-    textAlign: "center",
+  },
+  coverBrand: {
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: COLORS.accentSoft,
+    letterSpacing: 4,
     marginBottom: 6,
   },
+  coverDivider: {
+    width: 60,
+    height: 2,
+    backgroundColor: COLORS.accent,
+    marginVertical: 18,
+  },
+  coverTitle: {
+    fontSize: 32,
+    fontFamily: "Helvetica-Bold",
+    color: COLORS.white,
+    textAlign: "center",
+    marginBottom: 4,
+  },
+  coverTitleAccent: {
+    color: COLORS.accent,
+  },
   coverSubtitle: {
-    fontSize: 14,
-    color: COLORS.darkGray,
+    fontSize: 13,
+    color: COLORS.accentSoft,
     textAlign: "center",
     marginBottom: 30,
   },
   coverCompany: {
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: "Helvetica-Bold",
-    color: COLORS.primaryLight,
+    color: COLORS.white,
     textAlign: "center",
     marginBottom: 10,
   },
   coverDate: {
     fontSize: 11,
-    color: COLORS.textLight,
+    color: COLORS.accentSoft,
     textAlign: "center",
     marginBottom: 40,
   },
@@ -377,8 +412,8 @@ function PageHeader({ companyName }: HeaderFooterProps) {
 function PageFooter() {
   return (
     <View style={styles.pageFooter} fixed>
-      <Text style={styles.pageFooterText}>
-        Confidencial - O2 Inc. - CFOs as a Service
+      <Text style={styles.pageFooterBrand}>
+        O2 Inc. — CFOs as a Service
       </Text>
       <Text
         style={styles.pageFooterText}
@@ -396,22 +431,27 @@ function PageFooter() {
 
 function CoverPage({ result }: { result: DiagnosticResult }) {
   return (
-    <Page size="A4" style={[styles.page, { paddingTop: 40, paddingBottom: 40 }]}>
+    <Page size="A4" style={styles.coverPage}>
       <View style={styles.coverContainer}>
+        <View style={styles.coverLogoCircle}>
+          <Text style={styles.coverLogoText}>O2</Text>
+        </View>
         <Text style={styles.coverBrand}>O2 INC.</Text>
-        <Text style={{ fontSize: 9, color: COLORS.textLight, marginBottom: 6 }}>
+        <Text style={{ fontSize: 9, color: COLORS.accentSoft, marginBottom: 6, letterSpacing: 1 }}>
           CFOs as a Service
         </Text>
         <View style={styles.coverDivider} />
-        <Text style={styles.coverTitle}>Diagnostico 360</Text>
+        <Text style={styles.coverTitle}>
+          Grau de <Text style={styles.coverTitleAccent}>Maturidade</Text>
+        </Text>
         <Text style={styles.coverSubtitle}>
-          Relatorio de Maturidade Financeira
+          Diagnóstico Financeiro 360°
         </Text>
         <View style={[styles.coverDivider, { width: 40, marginVertical: 12 }]} />
         <Text style={styles.coverCompany}>{result.companyName}</Text>
         <Text style={styles.coverDate}>{formatDate(result.datePerformed)}</Text>
         <Text style={styles.coverConfidential}>
-          Confidencial - Preparado por O2 Inc.
+          Confidencial — Preparado por O2 Inc.
         </Text>
       </View>
     </Page>

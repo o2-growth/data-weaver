@@ -44,12 +44,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 const AppRoutes = () => (
   <Routes>
     {/* Rotas públicas */}
-    <Route path="/landing" element={<LandingPage />} />
+    <Route path="/" element={<LandingPage />} />
+    <Route path="/landing" element={<Navigate to="/" replace />} />
     <Route path="/login" element={<LoginPage />} />
 
     {/* Rotas protegidas */}
     <Route
-      path="/"
+      path="/app"
       element={
         <ProtectedRoute>
           <Index />

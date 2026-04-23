@@ -28,10 +28,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   role: UserRole;
+  isAdmin: boolean;
   isSupabaseMode: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
+
+const ADMIN_EMAILS = ['andrey.lopes@o2inc.com.br'];
 
 const LOCAL_USER: User = {
   id: 'local-user',
@@ -160,6 +163,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRole('intern');
   }, [isSupabaseMode]);
 
+  const isAdmin = !!user && ADMIN_EMAILS.includes(user.email.toLowerCase());
+
   return (
     <AuthContext.Provider
       value={{
@@ -167,6 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         isLoading,
         role,
+        isAdmin,
         isSupabaseMode,
         login,
         logout,

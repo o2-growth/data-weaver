@@ -12,26 +12,29 @@ import { getMaturityInfo } from '@/lib/calculations';
 // ────────────────────────────────────────────────────────────
 
 const COLORS = {
-  navy: '1E2761',
-  navyLight: '2D3A6A',
-  accent: '2563EB',
-  accentLight: '3B82F6',
+  // O2 Brand — Dark Premium + Neon Green
+  navy: '0A0A0A',         // dark bg (capa/divisor)
+  navyLight: '1A1A1A',
+  accent: '00E676',       // neon green
+  accentLight: '7EBF8E',  // sage
+  accentDark: '4CAF50',
   white: 'FFFFFF',
-  offWhite: 'F8FAFC',
-  lightGray: 'F1F5F9',
-  mediumGray: 'E2E8F0',
-  borderGray: 'CBD5E1',
-  darkGray: '64748B',
-  text: '1E293B',
-  textMuted: '94A3B8',
+  offWhite: 'F5F5F5',
+  lightGray: 'EEEEEE',
+  mediumGray: 'E0E0E0',
+  borderGray: 'CCCCCC',
+  darkGray: '525252',
+  text: '0A0A0A',
+  textMuted: '7EBF8E',
+  // Mantém escala de notas (legibilidade)
   grade1: 'DC2626',
   grade2: 'F97316',
   grade3: 'EAB308',
   grade4: '22C55E',
-  grade5: '3B82F6',
+  grade5: '00E676',
 } as const;
 
-const TITLE_FONT = 'Georgia';
+const TITLE_FONT = 'Calibri';
 const BODY_FONT = 'Calibri';
 
 const SLIDE_W = 13.33;
@@ -106,7 +109,7 @@ function getMaturityDescription(level: number): string {
 // ────────────────────────────────────────────────────────────
 
 function addContentSlideHeader(slide: PptxGenJS.Slide, title: string, subtitle?: string): void {
-  // Top accent bar
+  // Top accent bar (neon green)
   slide.addShape('rect', { x: 0, y: 0, w: SLIDE_W, h: 0.06, fill: { color: COLORS.accent } });
 
   slide.addText(title, {
@@ -121,10 +124,17 @@ function addContentSlideHeader(slide: PptxGenJS.Slide, title: string, subtitle?:
     });
   }
 
+  // Footer brand line
+  slide.addShape('rect', { x: 0, y: SLIDE_H - 0.25, w: SLIDE_W, h: 0.02, fill: { color: COLORS.accent } });
+  slide.addText('O2 Inc · Grau de Maturidade', {
+    x: MARGIN_X, y: SLIDE_H - 0.22, w: CONTENT_W / 2, h: 0.2,
+    fontFace: BODY_FONT, fontSize: 8, bold: true, color: COLORS.accentDark,
+  });
+
   // Slide number
   slide.slideNumber = {
-    x: SLIDE_W - 0.8, y: SLIDE_H - 0.4, w: 0.5,
-    fontSize: 9, fontFace: BODY_FONT, color: COLORS.darkGray, align: 'right',
+    x: SLIDE_W - 0.8, y: SLIDE_H - 0.22, w: 0.5,
+    fontSize: 8, fontFace: BODY_FONT, color: COLORS.darkGray, align: 'right',
   };
 }
 
@@ -151,45 +161,66 @@ function buildCoverSlide(pptx: PptxGenJS, result: DiagnosticResult): void {
   const slide = pptx.addSlide();
   slide.background = { color: COLORS.navy };
 
+  // Top accent bar
+  slide.addShape('rect', { x: 0, y: 0, w: SLIDE_W, h: 0.08, fill: { color: COLORS.accent } });
+
+  // O2 logo circle
+  slide.addShape('ellipse', {
+    x: MARGIN_X, y: 0.5, w: 0.7, h: 0.7,
+    fill: { color: COLORS.accent },
+  });
+  slide.addText('O2', {
+    x: MARGIN_X, y: 0.5, w: 0.7, h: 0.7,
+    fontFace: BODY_FONT, fontSize: 18, bold: true, color: COLORS.navy,
+    align: 'center', valign: 'middle',
+  });
+
   // O2 Inc branding
   slide.addText('O2 Inc.', {
-    x: MARGIN_X, y: 0.6, w: 4, h: 0.5,
-    fontFace: BODY_FONT, fontSize: 18, bold: true, color: COLORS.accent,
+    x: MARGIN_X + 0.85, y: 0.55, w: 4, h: 0.35,
+    fontFace: BODY_FONT, fontSize: 16, bold: true, color: COLORS.white,
+  });
+  slide.addText('CFOs as a Service', {
+    x: MARGIN_X + 0.85, y: 0.9, w: 4, h: 0.3,
+    fontFace: BODY_FONT, fontSize: 10, color: COLORS.accentLight,
   });
 
   // Accent line
-  slide.addShape('rect', { x: MARGIN_X, y: 1.25, w: 1.8, h: 0.04, fill: { color: COLORS.accent } });
+  slide.addShape('rect', { x: MARGIN_X, y: 1.9, w: 1.6, h: 0.04, fill: { color: COLORS.accent } });
 
-  // Main title
-  slide.addText('Diagnóstico 360°', {
-    x: MARGIN_X, y: 2.0, w: CONTENT_W, h: 1.1,
-    fontFace: TITLE_FONT, fontSize: 48, bold: true, color: COLORS.white,
+  // Main title — "Grau de Maturidade" com accent
+  slide.addText([
+    { text: 'Grau de ', options: { color: COLORS.white } },
+    { text: 'Maturidade', options: { color: COLORS.accent } },
+  ], {
+    x: MARGIN_X, y: 2.4, w: CONTENT_W, h: 1.2,
+    fontFace: TITLE_FONT, fontSize: 54, bold: true,
   });
 
   // Subtitle
-  slide.addText('Grau de Maturidade Financeira', {
-    x: MARGIN_X, y: 3.1, w: CONTENT_W, h: 0.6,
-    fontFace: BODY_FONT, fontSize: 22, color: COLORS.textMuted,
+  slide.addText('Diagnóstico Financeiro 360°', {
+    x: MARGIN_X, y: 3.6, w: CONTENT_W, h: 0.5,
+    fontFace: BODY_FONT, fontSize: 20, color: COLORS.accentLight,
   });
 
   // Company name
   slide.addText(result.companyName, {
-    x: MARGIN_X, y: 4.1, w: CONTENT_W, h: 0.7,
-    fontFace: TITLE_FONT, fontSize: 30, bold: true, color: COLORS.accentLight,
+    x: MARGIN_X, y: 4.5, w: CONTENT_W, h: 0.7,
+    fontFace: TITLE_FONT, fontSize: 30, bold: true, color: COLORS.white,
   });
 
   // Bottom separator
-  slide.addShape('rect', { x: MARGIN_X, y: 5.5, w: CONTENT_W, h: 0.01, fill: { color: COLORS.navyLight } });
+  slide.addShape('rect', { x: MARGIN_X, y: 5.7, w: CONTENT_W, h: 0.02, fill: { color: COLORS.accent } });
 
   // Date
   slide.addText(formatMonthYear(result.datePerformed), {
-    x: MARGIN_X, y: 5.7, w: CONTENT_W / 2, h: 0.4,
-    fontFace: BODY_FONT, fontSize: 14, color: COLORS.textMuted,
+    x: MARGIN_X, y: 5.9, w: CONTENT_W / 2, h: 0.4,
+    fontFace: BODY_FONT, fontSize: 14, color: COLORS.accentLight,
   });
 
   // Confidential
-  slide.addText('Confidencial', {
-    x: MARGIN_X, y: 6.6, w: CONTENT_W, h: 0.4,
+  slide.addText('Confidencial — Preparado por O2 Inc.', {
+    x: MARGIN_X, y: 6.7, w: CONTENT_W, h: 0.4,
     fontFace: BODY_FONT, fontSize: 10, italic: true, color: COLORS.darkGray,
   });
 }

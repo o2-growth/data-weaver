@@ -304,7 +304,7 @@ export default function Results() {
       <div className="min-h-screen lp-bg text-white flex items-center justify-center">
         <div className="text-center space-y-4">
           <p className="text-[#A0A0A0]">Nenhum resultado encontrado.</p>
-          <button onClick={() => navigate("/")} className="btn-neon-primary">Voltar ao Início</button>
+          <button onClick={() => navigate("/app")} className="btn-neon-primary">Voltar ao Início</button>
         </div>
       </div>
     );
@@ -343,7 +343,7 @@ export default function Results() {
             <PptxDownloadButton result={result} />
             <button
               type="button"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/app")}
               className="inline-flex items-center gap-2 px-3 h-9 rounded-xl border border-white/12 text-white text-xs font-semibold hover:border-white/25 hover:bg-white/5 transition-all"
             >
               <RotateCcw className="w-3.5 h-3.5" /> Novo
