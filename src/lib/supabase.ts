@@ -1,11 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+// Reaproveita o client oficial gerado pela integração Lovable Cloud,
+// que já lê as variáveis corretas (VITE_SUPABASE_URL + VITE_SUPABASE_PUBLISHABLE_KEY).
+// Mantemos o mesmo formato exportado para não quebrar imports legados.
+export { supabase } from '@/integrations/supabase/client';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-
-// Only create client if credentials are configured
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
-
-export const isSupabaseConfigured = () => !!supabase;
+export const isSupabaseConfigured = () => true;
