@@ -7,6 +7,7 @@ import { questions } from "@/data/questions";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { saveDiagnosticResult } from "@/lib/diagnosticStorage";
 import {
   ChevronLeft,
   ChevronRight,
@@ -262,7 +263,10 @@ export default function PresentationMode() {
 
   const handleComplete = useCallback(() => {
     const result = completeDiagnostic();
-    if (result) navigate("/resultados", { state: { result } });
+    if (result) {
+      saveDiagnosticResult(result);
+      navigate("/resultados", { state: { result } });
+    }
   }, [completeDiagnostic, navigate]);
 
   const globalScorePreview = useMemo(() => {
