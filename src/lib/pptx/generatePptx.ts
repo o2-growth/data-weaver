@@ -887,7 +887,9 @@ export async function generateDiagnosticPptx(result: DiagnosticResult): Promise<
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
   const dateStr = new Date(result.datePerformed).toISOString().split('T')[0];
-  const fileName = `diagnostico-360-${safeCompanyName}-${dateStr}`;
+  const fileName = `diagnostico-360-${safeCompanyName}-${dateStr}.pptx`;
 
-  await pptx.writeFile({ fileName });
+  const blob = (await pptx.write({ outputType: "blob" })) as Blob;
+  const { downloadBlob } = await import("@/lib/downloadBlob");
+  downloadBlob(blob, fileName);
 }

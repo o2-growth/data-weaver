@@ -5,6 +5,8 @@
 import { useState } from "react";
 import { FileDown, Loader2 } from "lucide-react";
 import { generatePdf } from "@/lib/pdf/generatePdf";
+import { downloadBlob } from "@/lib/downloadBlob";
+import { toast } from "sonner";
 import type { DiagnosticResult } from "@/types/diagnostic";
 import { cn } from "@/lib/utils";
 
@@ -21,22 +23,17 @@ export function PdfDownloadButton({ result, className }: PdfDownloadButtonProps)
     setIsGenerating(true);
     try {
       const blob = await generatePdf(result);
-      const url = URL.createObjectURL(blob);
       const safeCompanyName = result.companyName
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
       const dateStr = new Date(result.datePerformed).toISOString().split("T")[0];
       const fileName = `diagnostico-360-${safeCompanyName}-${dateStr}.pdf`;
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      downloadBlob(blob, fileName);
+      toast.success("PDF gerado com sucesso!");
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
+      toast.error("Erro ao gerar PDF. Tente novamente.");
     } finally {
       setIsGenerating(false);
     }
