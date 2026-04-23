@@ -4,7 +4,8 @@
 // Se configurado: busca do banco via Supabase client
 // ============================================================
 
-import { supabase } from '@/lib/supabase';
+import { supabase as supabaseTyped } from '@/lib/supabase';
+const supabase = supabaseTyped as any;
 import { areas as localAreas } from '@/data/areas';
 import { subAreas as localSubAreas } from '@/data/subareas';
 import { questions as localQuestions } from '@/data/questions';
