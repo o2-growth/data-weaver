@@ -12,26 +12,29 @@ import { getMaturityInfo } from '@/lib/calculations';
 // ────────────────────────────────────────────────────────────
 
 const COLORS = {
-  navy: '1E2761',
-  navyLight: '2D3A6A',
-  accent: '2563EB',
-  accentLight: '3B82F6',
+  // O2 Brand — Dark Premium + Neon Green
+  navy: '0A0A0A',         // dark bg (capa/divisor)
+  navyLight: '1A1A1A',
+  accent: '00E676',       // neon green
+  accentLight: '7EBF8E',  // sage
+  accentDark: '4CAF50',
   white: 'FFFFFF',
-  offWhite: 'F8FAFC',
-  lightGray: 'F1F5F9',
-  mediumGray: 'E2E8F0',
-  borderGray: 'CBD5E1',
-  darkGray: '64748B',
-  text: '1E293B',
-  textMuted: '94A3B8',
+  offWhite: 'F5F5F5',
+  lightGray: 'EEEEEE',
+  mediumGray: 'E0E0E0',
+  borderGray: 'CCCCCC',
+  darkGray: '525252',
+  text: '0A0A0A',
+  textMuted: '7EBF8E',
+  // Mantém escala de notas (legibilidade)
   grade1: 'DC2626',
   grade2: 'F97316',
   grade3: 'EAB308',
   grade4: '22C55E',
-  grade5: '3B82F6',
+  grade5: '00E676',
 } as const;
 
-const TITLE_FONT = 'Georgia';
+const TITLE_FONT = 'Calibri';
 const BODY_FONT = 'Calibri';
 
 const SLIDE_W = 13.33;
