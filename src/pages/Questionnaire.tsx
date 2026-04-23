@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import { useDiagnostic } from "@/hooks/useDiagnostic";
+import { useAuth } from "@/contexts/AuthContext";
 import { areas } from "@/data/areas";
 import { subAreas } from "@/data/subareas";
 import { questions } from "@/data/questions";
@@ -12,7 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  Wrench,
+  Zap,
   Building2,
   Monitor,
 } from "lucide-react";
@@ -22,7 +24,8 @@ export default function Questionnaire() {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const isAdmin = searchParams.get("admin") === "true";
+  const { isAdmin: isAdminUser } = useAuth();
+  const isAdmin = isAdminUser || searchParams.get("admin") === "true";
 
   const stateCompanyName = (location.state as Record<string, unknown>)?.companyName as string | undefined;
   const [inputCompanyName, setInputCompanyName] = useState("");
@@ -112,9 +115,23 @@ export default function Questionnaire() {
 
   const handleAutoFill = () => {
     if (!isStarted) return;
+    // Distribuição realista ponderada: 20% g2, 35% g3, 30% g4, 15% g5
+    const pickGrade = (): number => {
+      const r = Math.random();
+      if (r < 0.20) return 2;
+      if (r < 0.55) return 3;
+      if (r < 0.85) return 4;
+      return 5;
+    };
     for (const q of questions) {
-      const randomGrade = Math.floor(Math.random() * 5) + 1;
-      answerQuestion(q.id, randomGrade);
+      answerQuestion(q.id, pickGrade());
+    }
+    toast.success("Respostas fictícias aplicadas", {
+      description: "Vá até a última área para finalizar e ver os resultados.",
+    });
+    // Salta para a última área para liberar o botão "Concluir"
+    if (sortedAreas.length > 0) {
+      handleAreaChange(sortedAreas[sortedAreas.length - 1].id);
     }
   };
 
@@ -233,9 +250,11 @@ export default function Questionnaire() {
                 <button
                   type="button"
                   onClick={handleAutoFill}
-                  className="inline-flex items-center gap-1.5 px-3 h-8 rounded-full border border-white/12 text-white text-xs hover:border-white/25 hover:bg-white/5 transition-all"
+                  title="Preencher todas as perguntas com respostas fictícias (admin)"
+                  className="inline-flex items-center gap-1.5 px-3 h-8 rounded-full border border-[#00E676]/40 bg-[#00E676]/10 text-[#00E676] text-xs font-semibold hover:bg-[#00E676]/20 hover:border-[#00E676]/60 transition-all"
                 >
-                  <Wrench className="w-3.5 h-3.5" /> Preencher
+                  <Zap className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Preencher auto</span>
                 </button>
               )}
             </div>
