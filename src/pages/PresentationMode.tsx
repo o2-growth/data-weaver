@@ -77,7 +77,7 @@ export default function PresentationMode() {
   }, [companyName, isStarted, start]);
 
   useEffect(() => {
-    if (!companyName) navigate("/", { replace: true });
+    if (!companyName) navigate("/app", { replace: true });
   }, [companyName, navigate]);
 
   const sortedAreas = useMemo(
