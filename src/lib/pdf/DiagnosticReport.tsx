@@ -130,12 +130,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: COLORS.mediumGray,
+    borderTopColor: COLORS.accent,
     paddingTop: 6,
   },
   pageFooterText: {
     fontSize: 7,
     color: COLORS.textLight,
+  },
+  pageFooterBrand: {
+    fontSize: 7,
+    color: COLORS.accentDark,
+    fontFamily: "Helvetica-Bold",
   },
 
   // Cover page (dark)
@@ -407,8 +412,8 @@ function PageHeader({ companyName }: HeaderFooterProps) {
 function PageFooter() {
   return (
     <View style={styles.pageFooter} fixed>
-      <Text style={styles.pageFooterText}>
-        Confidencial - O2 Inc. - CFOs as a Service
+      <Text style={styles.pageFooterBrand}>
+        O2 Inc. — CFOs as a Service
       </Text>
       <Text
         style={styles.pageFooterText}
