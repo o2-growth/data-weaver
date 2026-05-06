@@ -20,7 +20,7 @@ export function LPFooter() {
           onClick={startCheckout}
           className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] font-black text-lg shadow-xl shadow-[#4CAF50]/30 hover:shadow-[#00E676]/50 hover:scale-[1.03] transition-all animate-glow-pulse"
         >
-          Obter Grau de Maturidade →
+          Iniciar Diagnóstico Gratuito →
         </button>
       </div>
 
