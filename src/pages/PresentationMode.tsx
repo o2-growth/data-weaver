@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import logoWhite from "@/assets/o2-logo-white.png";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDiagnostic } from "@/hooks/useDiagnostic";
 import { areas } from "@/data/areas";
@@ -372,11 +373,10 @@ export default function PresentationMode() {
       {/* Top Bar */}
       <header className="relative z-10 flex-shrink-0 flex items-center justify-between px-6 py-3 border-b border-white/8 bg-[#0A0A0A]/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center">
-            <span className="text-[#0A0A0A] font-black text-[10px]">O2</span>
-          </div>
-          <span className="text-sm font-bold tracking-tight">
-            Grau de <span className="gradient-text-neon">Maturidade</span>
+          <img src={logoWhite} alt="O2 Inc" className="h-6 w-auto" />
+          <span className="hidden sm:block w-px h-4 bg-white/20" />
+          <span className="hidden sm:block font-mono text-[10px] tracking-[0.1em] uppercase text-white/70">
+            Grau de Maturidade
           </span>
           <span className="text-xs text-[#7EBF8E] hidden sm:inline">
             — {session.companyName}

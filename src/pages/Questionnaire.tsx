@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import logoWhite from "@/assets/o2-logo-white.png";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useDiagnostic } from "@/hooks/useDiagnostic";
@@ -227,13 +228,12 @@ export default function Questionnaire() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center flex-shrink-0">
-                <span className="text-[#0A0A0A] font-black text-[10px]">O2</span>
-              </div>
-              <span className="text-sm font-bold tracking-tight truncate">
-                Grau de <span className="gradient-text-neon">Maturidade</span>
+              <img src={logoWhite} alt="O2 Inc" className="h-6 w-auto flex-shrink-0" />
+              <span className="hidden sm:inline-block w-px h-4 bg-white/20" />
+              <span className="hidden sm:inline font-mono text-[10px] tracking-[0.1em] uppercase text-white/60 truncate">
+                Grau de Maturidade
               </span>
-              <span className="hidden sm:inline text-xs text-[#7EBF8E] truncate">— {companyName}</span>
+              <span className="hidden md:inline text-xs text-[#7EBF8E] truncate">— {companyName}</span>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <span className="text-xs text-[#A0A0A0] font-medium tabular-nums whitespace-nowrap">
