@@ -28,9 +28,9 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { getMaturityInfo, getMaturityColor } from "@/lib/calculations";
-import { PdfDownloadButton } from "@/components/PdfDownloadButton";
-import { PptxDownloadButton } from "@/components/PptxDownloadButton";
 import { clearDiagnosticResult, loadDiagnosticResult } from "@/lib/diagnosticStorage";
+import { riskMatrix } from "@/data/riskMatrix";
+import { AnswerSuggestion } from "@/components/AnswerSuggestion";
 
 // ────────────────────────────────────────────────────────────
 // Helpers
@@ -352,8 +352,6 @@ export default function Results() {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <PdfDownloadButton result={result} />
-            <PptxDownloadButton result={result} />
             <button
               type="button"
               onClick={() => {
@@ -508,6 +506,9 @@ export default function Results() {
                         {areaQuestions.map((q) => {
                           const answer = result.answers[q.id];
                           if (!answer) return null;
+                          const matrixEntry = riskMatrix.find(
+                            (m) => m.questionId === q.id && m.grade === answer.grade
+                          );
                           return (
                             <div key={q.id} className="p-4 space-y-2">
                               <div className="flex items-start justify-between gap-3">
@@ -528,6 +529,7 @@ export default function Results() {
                                   <p className="text-xs text-[#A0A0A0] italic">{answer.observation}</p>
                                 </div>
                               )}
+                              {matrixEntry && <AnswerSuggestion entry={matrixEntry} />}
                             </div>
                           );
                         })}

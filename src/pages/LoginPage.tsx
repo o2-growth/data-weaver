@@ -51,7 +51,7 @@ export default function LoginPage() {
         if (err) throw err;
         setInfo('Enviamos um link de recuperação para seu e-mail. Verifique também o spam.');
       } else if (mode === 'signup') {
-        const { error: err } = await supabase.auth.signUp({
+        const { data, error: err } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -60,7 +60,12 @@ export default function LoginPage() {
           },
         });
         if (err) throw err;
-        navigate('/app', { replace: true });
+        if (data.session) {
+          navigate('/app', { replace: true });
+        } else {
+          setInfo('Conta criada! Verifique seu e-mail para confirmar e então faça login.');
+          setMode('login');
+        }
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({
           email,
