@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCheckout } from "@/hooks/useCheckout";
+import logoWhite from "@/assets/o2-logo-white.png";
 
 const links = [
   { id: "como-funciona", label: "Como funciona" },
@@ -12,7 +12,6 @@ const links = [
 export function LPNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const { startCheckout, CheckoutDialog } = useCheckout();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -30,55 +29,47 @@ export function LPNavbar() {
     <nav
       className={`fixed top-0 inset-x-0 h-16 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#0A0A0A]/95 backdrop-blur-md border-b border-white/10"
+          ? "bg-background/90 backdrop-blur-md border-b border-border"
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-6xl mx-auto h-full px-6 flex items-center justify-between">
-        {/* Logo */}
+      <div className="max-w-[1320px] mx-auto h-full px-5 md:px-12 flex items-center justify-between gap-3">
+        {/* Brand */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2.5 group"
-          aria-label="Grau de Maturidade"
+          className="flex items-center gap-3 min-w-0"
+          aria-label="O2 Inc — Grau de Maturidade"
         >
-          <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center text-[#0A0A0A] font-black text-xs">
-            O2
-          </span>
-          <span className="font-display font-bold text-white text-base tracking-tight">
-            Grau de <span className="text-[#00E676]">Maturidade</span>
+          <img src={logoWhite} alt="O2 Inc" className="h-7 w-auto" />
+          <span className="hidden sm:block w-px h-5 bg-foreground/20" />
+          <span className="hidden sm:block font-mono text-[11px] tracking-[0.1em] uppercase text-foreground/70 whitespace-nowrap">
+            Grau de Maturidade
           </span>
         </button>
 
-        {/* Center links */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Center */}
+        <div className="hidden md:flex items-center gap-2">
           {links.map((l) => (
             <button
               key={l.id}
               onClick={() => smoothTo(l.id)}
-              className="text-sm font-medium text-[#A0A0A0] hover:text-white transition-colors"
+              className="px-3 py-2 rounded-full text-[13px] text-foreground/70 hover:text-ink-900 hover:bg-lima-500 transition-colors"
             >
               {l.label}
             </button>
           ))}
         </div>
 
-        {/* Right CTAs */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/login")}
-            className="hidden sm:inline-flex px-5 py-2 rounded-full border border-[#7EBF8E]/40 text-[#7EBF8E] text-sm font-medium hover:bg-[#7EBF8E]/10 hover:border-[#7EBF8E]/60 transition-all"
-          >
-            Entrar
+        {/* Actions */}
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate("/login")} className="btn btn-ghost btn-sm">
+            ENTRAR
           </button>
-          <button
-            onClick={startCheckout}
-            className="px-5 py-2 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] text-sm font-bold hover:scale-[1.03] transition-transform shadow-lg shadow-[#4CAF50]/20"
-          >
-            Iniciar Diagnóstico
+          <button onClick={() => navigate("/login")} className="btn btn-primary btn-sm">
+            FAZER DIAGNÓSTICO
           </button>
         </div>
       </div>
-      {CheckoutDialog}
     </nav>
   );
 }

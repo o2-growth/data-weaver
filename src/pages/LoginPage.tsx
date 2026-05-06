@@ -12,6 +12,7 @@ import { Shield, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { lovable } from '@/integrations/lovable';
+import logoWhite from '@/assets/o2-logo-white.png';
 
 type Mode = 'login' | 'signup';
 
@@ -94,11 +95,10 @@ export default function LoginPage() {
       <header className="relative z-10 lp-header">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <button onClick={() => navigate('/')} className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center">
-              <span className="text-[#0A0A0A] font-black text-xs">O2</span>
-            </div>
-            <span className="text-sm font-bold tracking-tight">
-              Grau de <span className="gradient-text-neon">Maturidade</span>
+            <img src={logoWhite} alt="O2 Inc" className="h-7 w-auto" />
+            <span className="hidden sm:block w-px h-5 bg-foreground/20" />
+            <span className="hidden sm:block font-mono text-[11px] tracking-[0.1em] uppercase text-foreground/70">
+              Grau de Maturidade
             </span>
           </button>
           <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
@@ -108,13 +108,12 @@ export default function LoginPage() {
       <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-md space-y-8 animate-fade-in">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#4CAF50]/10 border border-[#7EBF8E]/30 mb-2">
-              <Shield className="w-8 h-8 text-[#00E676]" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.05] font-display">
+            <h1 className="font-display font-bold text-foreground"
+              style={{ fontSize: "clamp(40px, 7vw, 64px)", lineHeight: 1 }}
+            >
               Acesse a <span className="gradient-text-neon">plataforma</span>
             </h1>
-            <p className="text-[#A0A0A0] text-base leading-relaxed">
+            <p className="text-foreground/70 text-base leading-relaxed normal-case">
               Entre para iniciar seu diagnóstico de maturidade financeira.
             </p>
           </div>
