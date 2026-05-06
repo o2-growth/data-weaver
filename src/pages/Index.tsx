@@ -15,6 +15,7 @@ import {
   TrendingUp,
   ClipboardCheck,
   Monitor,
+  History,
 } from "lucide-react";
 
 const features = [
