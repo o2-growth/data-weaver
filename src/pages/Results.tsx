@@ -331,6 +331,13 @@ export default function Results() {
   }, [result]);
 
   if (!result) {
+    if (loadingRemote) {
+      return (
+        <div className="min-h-screen lp-bg text-white flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-[#00E676] border-t-transparent rounded-full animate-spin" />
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen lp-bg text-white flex items-center justify-center">
         <div className="text-center space-y-4">
