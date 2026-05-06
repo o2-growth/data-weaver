@@ -20,7 +20,7 @@ import {
   Monitor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { saveDiagnosticResult } from "@/lib/diagnosticStorage";
+import { saveDiagnostic } from "@/lib/diagnosticsRepo";
 
 export default function Questionnaire() {
   const location = useLocation();
