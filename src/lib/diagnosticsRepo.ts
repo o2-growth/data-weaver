@@ -2,7 +2,7 @@
 // Repositório de diagnósticos (banco + cache local como fallback)
 // ============================================================
 
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import {
   saveDiagnosticResult,
   loadDiagnosticResult,
