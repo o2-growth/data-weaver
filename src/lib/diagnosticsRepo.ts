@@ -42,7 +42,7 @@ export async function saveDiagnostic(
           date_performed: result.datePerformed,
           global_score: result.globalScore,
           maturity_level: result.maturityLevel,
-          result: result as unknown as Record<string, unknown>,
+          result: result as any,
         },
       ])
       .select("id")
