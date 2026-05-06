@@ -279,10 +279,32 @@ function useScrollFadeIn() {
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const idParam = searchParams.get("id");
   const navigationResult = (location.state as { result?: DiagnosticResult } | null)?.result;
+
+  const [remoteResult, setRemoteResult] = useState<DiagnosticResult | null>(null);
+  const [loadingRemote, setLoadingRemote] = useState(Boolean(idParam));
+
+  useEffect(() => {
+    if (!idParam) return;
+    let cancelled = false;
+    setLoadingRemote(true);
+    getDiagnostic(idParam)
+      .then((r) => {
+        if (!cancelled) setRemoteResult(r);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingRemote(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [idParam]);
+
   const result = useMemo(
-    () => navigationResult ?? loadDiagnosticResult(),
-    [navigationResult]
+    () => navigationResult ?? remoteResult ?? loadDiagnosticResult(),
+    [navigationResult, remoteResult]
   );
 
   const [riskFilter, setRiskFilter] = useState<RiskFilter>("Todos");
