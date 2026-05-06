@@ -1,6 +1,6 @@
 import { useState } from "react";
 import logoWhite from "@/assets/o2-logo-white.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GlassCard } from "@/components/ui/glass-card";
@@ -15,6 +15,7 @@ import {
   TrendingUp,
   ClipboardCheck,
   Monitor,
+  History,
 } from "lucide-react";
 
 const features = [
@@ -64,7 +65,15 @@ export default function Index() {
               Grau de Maturidade
             </span>
           </div>
-          <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/historico"
+              className="inline-flex items-center gap-2 px-3 h-9 rounded-xl border border-white/12 text-white text-xs font-semibold hover:border-white/25 hover:bg-white/5 transition-all"
+            >
+              <History className="w-3.5 h-3.5" /> Histórico
+            </Link>
+            <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
+          </div>
         </div>
       </header>
 

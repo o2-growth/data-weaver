@@ -1,6 +1,9 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import logoWhite from "@/assets/o2-logo-white.png";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom";
+import { PdfDownloadButton } from "@/components/PdfDownloadButton";
+import { getDiagnostic } from "@/lib/diagnosticsRepo";
+import { History } from "lucide-react";
 import type { DiagnosticResult, IdentifiedRisk } from "@/types/diagnostic";
 import { questions } from "@/data/questions";
 import { RadarChart } from "@/components/RadarChart";
@@ -276,10 +279,32 @@ function useScrollFadeIn() {
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const idParam = searchParams.get("id");
   const navigationResult = (location.state as { result?: DiagnosticResult } | null)?.result;
+
+  const [remoteResult, setRemoteResult] = useState<DiagnosticResult | null>(null);
+  const [loadingRemote, setLoadingRemote] = useState(Boolean(idParam));
+
+  useEffect(() => {
+    if (!idParam) return;
+    let cancelled = false;
+    setLoadingRemote(true);
+    getDiagnostic(idParam)
+      .then((r) => {
+        if (!cancelled) setRemoteResult(r);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingRemote(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [idParam]);
+
   const result = useMemo(
-    () => navigationResult ?? loadDiagnosticResult(),
-    [navigationResult]
+    () => navigationResult ?? remoteResult ?? loadDiagnosticResult(),
+    [navigationResult, remoteResult]
   );
 
   const [riskFilter, setRiskFilter] = useState<RiskFilter>("Todos");
@@ -306,6 +331,13 @@ export default function Results() {
   }, [result]);
 
   if (!result) {
+    if (loadingRemote) {
+      return (
+        <div className="min-h-screen lp-bg text-white flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-[#00E676] border-t-transparent rounded-full animate-spin" />
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen lp-bg text-white flex items-center justify-center">
         <div className="text-center space-y-4">
@@ -352,6 +384,13 @@ export default function Results() {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
+            <Link
+              to="/historico"
+              className="inline-flex items-center gap-2 px-3 h-9 rounded-xl border border-white/12 text-white text-xs font-semibold hover:border-white/25 hover:bg-white/5 transition-all"
+            >
+              <History className="w-3.5 h-3.5" /> Histórico
+            </Link>
+            <PdfDownloadButton result={result} />
             <button
               type="button"
               onClick={() => {

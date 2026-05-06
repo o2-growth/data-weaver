@@ -61,72 +61,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  // Buscar role do usuário no banco
-  const fetchRole = useCallback(
-    async (userId: string) => {
-      if (!supabase) return 'admin' as UserRole;
-
-      const { data } = await (supabase as any)
-        .from('usuarios')
-        .select('role')
-        .eq('id', userId)
-        .single();
-
-      return (data?.role as UserRole) ?? 'intern';
-    },
-    []
-  );
-
   // Inicialização
   useEffect(() => {
     if (!isSupabaseMode) {
-      // Modo local: auto-login
       setUser(LOCAL_USER);
       setRole('admin');
       setIsLoading(false);
       return;
     }
 
-    // Modo Supabase: verificar sessão existente
     let isMounted = true;
 
-    const initAuth = async () => {
-      try {
-        const { data: { session } } = await supabase!.auth.getSession();
-
-        if (session?.user && isMounted) {
-          setUser(mapUser(session.user));
-          const userRole = await fetchRole(session.user.id);
-          if (isMounted) setRole(userRole);
-        }
-      } catch (err) {
-        console.error('[AuthContext] Erro ao inicializar auth:', err);
-      } finally {
-        if (isMounted) setIsLoading(false);
-      }
-    };
-
-    initAuth();
-
-    // Listener de mudanças de auth
+    // Listener síncrono — NUNCA fazer await em chamadas Supabase aqui (deadlock conhecido)
     const { data: { subscription } } = supabase!.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (session?.user && isMounted) {
+      (_event, session) => {
+        if (!isMounted) return;
+        if (session?.user) {
           setUser(mapUser(session.user));
-          const userRole = await fetchRole(session.user.id);
-          if (isMounted) setRole(userRole);
-        } else if (isMounted) {
+          setRole('admin');
+        } else {
           setUser(null);
           setRole('intern');
         }
       }
     );
 
+    // Verificar sessão existente DEPOIS de registrar o listener
+    supabase!.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (!isMounted) return;
+        if (session?.user) {
+          setUser(mapUser(session.user));
+          setRole('admin');
+        }
+      })
+      .catch((err) => {
+        console.error('[AuthContext] Erro ao inicializar auth:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
     return () => {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [isSupabaseMode, mapUser, fetchRole]);
+  }, [isSupabaseMode, mapUser]);
 
   const login = useCallback(
     async (email: string, password: string) => {

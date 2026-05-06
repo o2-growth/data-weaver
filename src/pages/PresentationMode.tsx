@@ -8,7 +8,7 @@ import { questions } from "@/data/questions";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { saveDiagnosticResult } from "@/lib/diagnosticStorage";
+import { saveDiagnostic } from "@/lib/diagnosticsRepo";
 import {
   ChevronLeft,
   ChevronRight,
@@ -262,10 +262,10 @@ export default function PresentationMode() {
     }
   }, [isStarted, answerQuestion]);
 
-  const handleComplete = useCallback(() => {
+  const handleComplete = useCallback(async () => {
     const result = completeDiagnostic();
     if (result) {
-      saveDiagnosticResult(result);
+      await saveDiagnostic(result);
       navigate("/resultados", { state: { result } });
     }
   }, [completeDiagnostic, navigate]);
