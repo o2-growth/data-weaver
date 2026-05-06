@@ -40,10 +40,10 @@ export function LPFAQ() {
         }`}
       >
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E] mb-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-accent mb-3">
             Perguntas frequentes
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-white">
+          <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-foreground">
             Tudo que você precisa{" "}
             <span className="bg-gradient-to-r from-[#7EBF8E] to-[#00E676] bg-clip-text text-transparent">
               saber.
@@ -56,12 +56,12 @@ export function LPFAQ() {
             <AccordionItem
               key={f.q}
               value={`item-${i}`}
-              className="border-white/[0.08]"
+              className="border-border"
             >
-              <AccordionTrigger className="text-white text-left font-bold hover:text-[#7EBF8E] hover:no-underline">
+              <AccordionTrigger className="text-foreground text-left font-bold hover:text-accent hover:no-underline">
                 {f.q}
               </AccordionTrigger>
-              <AccordionContent className="text-[#A0A0A0] leading-relaxed">
+              <AccordionContent className="text-foreground/65 leading-relaxed">
                 {f.a}
               </AccordionContent>
             </AccordionItem>

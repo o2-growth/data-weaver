@@ -26,13 +26,13 @@ export function LPHowItWorks() {
   const { ref, visible } = useScrollReveal<HTMLDivElement>();
 
   return (
-    <section id="como-funciona" className="relative py-24 px-6 bg-[#0A0A0A]">
+    <section id="como-funciona" className="relative py-24 px-6 bg-background">
       <div ref={ref} className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E] mb-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-accent mb-3">
             Como funciona
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-white">
+          <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-foreground">
             Do questionário ao plano de ação
             <br />
             <span className="bg-gradient-to-r from-[#7EBF8E] to-[#00E676] bg-clip-text text-transparent">
@@ -53,23 +53,23 @@ export function LPHowItWorks() {
             return (
               <div
                 key={s.n}
-                className={`relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:border-[#7EBF8E]/30 hover:bg-[#7EBF8E]/[0.04] transition-all duration-500 ${
+                className={`relative p-6 rounded-2xl border border-border bg-white/[0.02] hover:border-[#7EBF8E]/30 hover:bg-[#7EBF8E]/[0.04] transition-all duration-500 ${
                   visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div className="flex items-center gap-3 mb-5">
                   <span className="w-12 h-12 rounded-xl bg-[#4CAF50]/10 border border-[#7EBF8E]/20 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-[#7EBF8E]" />
+                    <Icon className="w-5 h-5 text-accent" />
                   </span>
-                  <span className="font-display text-3xl font-black text-[#7EBF8E]/30">
+                  <span className="font-display text-3xl font-black text-accent/30">
                     {s.n}
                   </span>
                 </div>
-                <h3 className="font-display text-white font-bold text-lg mb-2">
+                <h3 className="font-display text-foreground font-bold text-lg mb-2">
                   {s.title}
                 </h3>
-                <p className="text-sm text-[#A0A0A0] leading-relaxed">{s.body}</p>
+                <p className="text-sm text-foreground/65 leading-relaxed">{s.body}</p>
               </div>
             );
           })}
