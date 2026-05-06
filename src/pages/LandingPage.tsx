@@ -6,7 +6,7 @@ import { LPHowItWorks } from "@/components/landing/LPHowItWorks";
 import { LPAreas } from "@/components/landing/LPAreas";
 import { LPResults } from "@/components/landing/LPResults";
 import { LPTestimonials } from "@/components/landing/LPTestimonials";
-import { LPPricing } from "@/components/landing/LPPricing";
+
 import { LPFAQ } from "@/components/landing/LPFAQ";
 import { LPFooter } from "@/components/landing/LPFooter";
 
@@ -37,7 +37,7 @@ export default function LandingPage() {
       <LPAreas />
       <LPResults />
       <LPTestimonials />
-      <LPPricing />
+      
       <LPFAQ />
       <LPFooter />
     </main>
