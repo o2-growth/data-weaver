@@ -31,10 +31,10 @@ export function LPTestimonials() {
     <section id="depoimentos" className="relative py-24 px-6 bg-[#0D0D0D]">
       <div ref={ref} className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E] mb-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-accent mb-3">
             Para quem é
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-white">
+          <h2 className="font-display text-4xl md:text-5xl font-black leading-tight text-foreground">
             Feito para quem{" "}
             <span className="bg-gradient-to-r from-[#7EBF8E] to-[#00E676] bg-clip-text text-transparent">
               decide com números.
@@ -46,17 +46,17 @@ export function LPTestimonials() {
           {testimonials.map((t, i) => (
             <figure
               key={t.name}
-              className={`p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] transition-all duration-500 ${
+              className={`p-6 rounded-2xl border border-border bg-white/[0.02] transition-all duration-500 ${
                 visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
               style={{ transitionDelay: `${i * 150}ms` }}
             >
               <div className="flex gap-0.5 mb-4">
                 {Array.from({ length: 5 }).map((_, k) => (
-                  <Star key={k} className="w-4 h-4 text-[#00E676] fill-[#00E676]" />
+                  <Star key={k} className="w-4 h-4 text-accent fill-[#00E676]" />
                 ))}
               </div>
-              <blockquote className="text-[#A0A0A0] leading-relaxed text-sm mb-6">
+              <blockquote className="text-foreground/65 leading-relaxed text-sm mb-6">
                 "{t.quote}"
               </blockquote>
               <figcaption className="flex items-center gap-3">
@@ -64,8 +64,8 @@ export function LPTestimonials() {
                   {t.initials}
                 </span>
                 <span className="flex flex-col">
-                  <span className="text-white font-bold text-sm">{t.name}</span>
-                  <span className="text-[#606060] text-xs">{t.role}</span>
+                  <span className="text-foreground font-bold text-sm">{t.name}</span>
+                  <span className="text-foreground/45 text-xs">{t.role}</span>
                 </span>
               </figcaption>
             </figure>

@@ -16,9 +16,9 @@ const segments = [
 export function LPSocialProof() {
   const list = [...segments, ...segments];
   return (
-    <section className="relative py-16 bg-[#0D0D0D] border-y border-white/[0.06] overflow-hidden">
+    <section className="relative py-16 bg-[#0D0D0D] border-y border-border overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 mb-8 text-center">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#7EBF8E]">
+        <p className="text-xs font-bold uppercase tracking-widest text-accent">
           Aplicável a empresas de qualquer porte e segmento
         </p>
       </div>
@@ -30,7 +30,7 @@ export function LPSocialProof() {
           {list.map((s, i) => (
             <span
               key={`${s}-${i}`}
-              className="px-5 py-2.5 rounded-full border border-white/[0.08] bg-white/[0.02] text-[#606060] text-sm whitespace-nowrap"
+              className="px-5 py-2.5 rounded-full border border-border bg-white/[0.02] text-foreground/45 text-sm whitespace-nowrap"
             >
               {s}
             </span>
