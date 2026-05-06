@@ -384,6 +384,13 @@ export default function Results() {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
+            <Link
+              to="/historico"
+              className="inline-flex items-center gap-2 px-3 h-9 rounded-xl border border-white/12 text-white text-xs font-semibold hover:border-white/25 hover:bg-white/5 transition-all"
+            >
+              <History className="w-3.5 h-3.5" /> Histórico
+            </Link>
+            <PdfDownloadButton result={result} />
             <button
               type="button"
               onClick={() => {
