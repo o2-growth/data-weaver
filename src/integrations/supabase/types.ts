@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      diagnostics: {
+        Row: {
+          company_name: string
+          created_at: string
+          date_performed: string
+          global_score: number
+          id: string
+          maturity_level: number
+          result: Json
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          created_at?: string
+          date_performed?: string
+          global_score: number
+          id?: string
+          maturity_level: number
+          result: Json
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          created_at?: string
+          date_performed?: string
+          global_score?: number
+          id?: string
+          maturity_level?: number
+          result?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
