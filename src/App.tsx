@@ -84,6 +84,14 @@ const AppRoutes = () => (
         </ProtectedRoute>
       }
     />
+    <Route
+      path="/historico"
+      element={
+        <ProtectedRoute>
+          <HistoryPage />
+        </ProtectedRoute>
+      }
+    />
 
     {/* 404 */}
     <Route path="*" element={<NotFound />} />
