@@ -65,7 +65,15 @@ export default function Index() {
               Grau de Maturidade
             </span>
           </div>
-          <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/historico"
+              className="inline-flex items-center gap-2 px-3 h-9 rounded-xl border border-white/12 text-white text-xs font-semibold hover:border-white/25 hover:bg-white/5 transition-all"
+            >
+              <History className="w-3.5 h-3.5" /> Histórico
+            </Link>
+            <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>
+          </div>
         </div>
       </header>
 
