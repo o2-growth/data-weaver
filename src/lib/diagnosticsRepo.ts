@@ -35,14 +35,16 @@ export async function saveDiagnostic(
 
     const { data, error } = await supabase
       .from("diagnostics")
-      .insert({
-        user_id: userId,
-        company_name: result.companyName,
-        date_performed: result.datePerformed,
-        global_score: result.globalScore,
-        maturity_level: result.maturityLevel,
-        result: result as unknown as Record<string, unknown>,
-      })
+      .insert([
+        {
+          user_id: userId,
+          company_name: result.companyName,
+          date_performed: result.datePerformed,
+          global_score: result.globalScore,
+          maturity_level: result.maturityLevel,
+          result: result as unknown as Record<string, unknown>,
+        },
+      ])
       .select("id")
       .single();
 
