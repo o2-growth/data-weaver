@@ -14,10 +14,24 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["'Inter'", "system-ui", "sans-serif"],
-        display: ["'Space Grotesk'", "'Inter'", "system-ui", "sans-serif"],
+        sans: ["'Montserrat'", "system-ui", "-apple-system", "sans-serif"],
+        display: ["'Tusker Grotesk'", "'Anton'", "'Barlow Condensed'", "Impact", "sans-serif"],
+        mono: ["'JetBrains Mono'", "Consolas", "Menlo", "monospace"],
       },
       colors: {
+        lima: {
+          400: "hsl(var(--lima-400))",
+          500: "hsl(var(--lima-500))",
+          600: "hsl(var(--lima-600))",
+        },
+        ink: {
+          150: "hsl(var(--ink-150))",
+          200: "hsl(var(--ink-200))",
+          300: "hsl(var(--ink-300))",
+          500: "hsl(var(--ink-500))",
+          700: "hsl(var(--ink-700))",
+          900: "hsl(var(--ink-900))",
+        },
         maturity: {
           1: "hsl(var(--maturity-1))",
           2: "hsl(var(--maturity-2))",
