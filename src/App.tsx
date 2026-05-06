@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import PresentationMode from "./pages/PresentationMode.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
+import HistoryPage from "./pages/HistoryPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
