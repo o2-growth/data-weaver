@@ -1,6 +1,9 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import logoWhite from "@/assets/o2-logo-white.png";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom";
+import { PdfDownloadButton } from "@/components/PdfDownloadButton";
+import { getDiagnostic } from "@/lib/diagnosticsRepo";
+import { History } from "lucide-react";
 import type { DiagnosticResult, IdentifiedRisk } from "@/types/diagnostic";
 import { questions } from "@/data/questions";
 import { RadarChart } from "@/components/RadarChart";
