@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logoWhite from "@/assets/o2-logo-white.png";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,11 +58,10 @@ export default function Index() {
       <header className="lp-header sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center">
-              <span className="text-[#0A0A0A] font-black text-xs">O2</span>
-            </div>
-            <span className="text-sm font-bold tracking-tight">
-              Grau de <span className="gradient-text-neon">Maturidade</span>
+            <img src={logoWhite} alt="O2 Inc" className="h-7 w-auto" />
+            <span className="hidden sm:block w-px h-5 bg-white/20" />
+            <span className="hidden sm:block font-mono text-[11px] tracking-[0.1em] uppercase text-white/70">
+              Grau de Maturidade
             </span>
           </div>
           <span className="eyebrow-pill text-[10px]">CFOs as a Service</span>

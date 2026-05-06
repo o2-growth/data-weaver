@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import logoWhite from "@/assets/o2-logo-white.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { DiagnosticResult, IdentifiedRisk } from "@/types/diagnostic";
 import { questions } from "@/data/questions";
@@ -341,12 +342,11 @@ export default function Results() {
       <header className="sticky top-0 z-10 lp-header">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7EBF8E] to-[#4CAF50] flex items-center justify-center flex-shrink-0">
-              <span className="text-[#0A0A0A] font-black text-xs">O2</span>
-            </div>
+            <img src={logoWhite} alt="O2 Inc" className="h-7 w-auto flex-shrink-0" />
+            <span className="hidden sm:block w-px h-5 bg-white/20" />
             <div className="min-w-0">
-              <span className="text-sm font-bold tracking-tight block truncate">
-                Grau de <span className="gradient-text-neon">Maturidade</span>
+              <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-white/70 block truncate">
+                Grau de Maturidade
               </span>
               <p className="text-[10px] text-[#A0A0A0] truncate">{result.companyName} &middot; {formattedDate}</p>
             </div>
