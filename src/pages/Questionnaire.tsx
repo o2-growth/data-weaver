@@ -148,10 +148,10 @@ export default function Questionnaire() {
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     const result = completeDiagnostic();
     if (result) {
-      saveDiagnosticResult(result);
+      await saveDiagnostic(result);
       navigate("/resultados", { state: { result } });
     }
   };
