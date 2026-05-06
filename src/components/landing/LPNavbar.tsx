@@ -68,13 +68,13 @@ export function LPNavbar() {
             onClick={() => navigate("/login")}
             className="hidden sm:inline-flex px-5 py-2 rounded-full border border-[#7EBF8E]/40 text-[#7EBF8E] text-sm font-medium hover:bg-[#7EBF8E]/10 hover:border-[#7EBF8E]/60 transition-all"
           >
-            Já comprei
+            Entrar
           </button>
           <button
             onClick={startCheckout}
             className="px-5 py-2 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#00E676] text-[#0A0A0A] text-sm font-bold hover:scale-[1.03] transition-transform shadow-lg shadow-[#4CAF50]/20"
           >
-            Obter Grau de Maturidade
+            Iniciar Diagnóstico
           </button>
         </div>
       </div>
