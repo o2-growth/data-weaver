@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import Questionnaire from "./pages/Questionnaire.tsx";
 import Results from "./pages/Results.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import PresentationMode from "./pages/PresentationMode.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -47,6 +48,7 @@ const AppRoutes = () => (
     <Route path="/" element={<LandingPage />} />
     <Route path="/landing" element={<Navigate to="/" replace />} />
     <Route path="/login" element={<LoginPage />} />
+    <Route path="/reset-password" element={<ResetPasswordPage />} />
 
     {/* Rotas protegidas */}
     <Route

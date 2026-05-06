@@ -14,7 +14,7 @@ import { supabase } from '@/lib/supabase';
 import { lovable } from '@/integrations/lovable';
 import logoWhite from '@/assets/o2-logo-white.png';
 
-type Mode = 'login' | 'signup';
+type Mode = 'login' | 'signup' | 'forgot';
 
 export default function LoginPage() {
   const { isAuthenticated } = useAuth();
@@ -25,18 +25,32 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/app" replace />;
   }
 
+  const switchMode = (m: Mode) => {
+    setMode(m);
+    setError('');
+    setInfo('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setInfo('');
     setIsSubmitting(true);
     try {
-      if (mode === 'signup') {
+      if (mode === 'forgot') {
+        const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (err) throw err;
+        setInfo('Enviamos um link de recuperação para seu e-mail. Verifique também o spam.');
+      } else if (mode === 'signup') {
         const { error: err } = await supabase.auth.signUp({
           email,
           password,
@@ -46,14 +60,15 @@ export default function LoginPage() {
           },
         });
         if (err) throw err;
+        navigate('/app', { replace: true });
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (err) throw err;
+        navigate('/app', { replace: true });
       }
-      navigate('/app', { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao autenticar');
     } finally {
