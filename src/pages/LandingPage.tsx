@@ -28,7 +28,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <main className="bg-[#0A0A0A] text-white min-h-screen font-sans">
+    <main className="bg-background text-foreground min-h-screen font-sans">
       <h1 className="sr-only">Grau de Maturidade — O2 Inc</h1>
       <LPNavbar />
       <LPHero />
