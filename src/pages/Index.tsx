@@ -1,6 +1,6 @@
 import { useState } from "react";
 import logoWhite from "@/assets/o2-logo-white.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GlassCard } from "@/components/ui/glass-card";
