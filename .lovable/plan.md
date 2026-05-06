@@ -1,31 +1,36 @@
-## Substituir logo "inventada" pelas logos oficiais O2
+## Habilitar "Esqueci minha senha" funcional
 
-### Problema
-Em 4 páginas internas (Index, Questionnaire, Results, PresentationMode), o cabeçalho ainda usa um placeholder que eu inventei: um círculo verde com gradiente `from-[#7EBF8E] to-[#4CAF50]` com o texto "O2" em preto. Isso não é a marca oficial — deve ser a logo PNG real (`src/assets/o2-logo-white.png` para wordmark ou `src/assets/o2-icon.png` para o símbolo).
+### Fluxo
+1. Login: novo link "Esqueci minha senha" abre o modo `forgot` no mesmo card. Usuário digita e-mail → `supabase.auth.resetPasswordForEmail(email, { redirectTo: ${origin}/reset-password })` → mostra mensagem de sucesso.
+2. Usuário recebe e-mail (template padrão Lovable Auth — já funcional, sem custom domain) e clica no link.
+3. Link aterrissa em `/reset-password` com token no hash. O Supabase processa o hash e dispara `PASSWORD_RECOVERY` em `onAuthStateChange`.
+4. Página exibe formulário "nova senha + confirmar". Submete com `supabase.auth.updateUser({ password })`. Em sucesso, redireciona para `/app`.
 
 ### Mudanças
 
-Substituir, em cada um dos 4 cabeçalhos, o `<div>` circular + `<span>O2</span>` pela **logo wordmark branca** (`o2-logo-white.png`), que é a representação oficial em interfaces dark.
+**1. `src/pages/LoginPage.tsx`** — adicionar modo `forgot`:
+- Tipo `Mode = 'login' | 'signup' | 'forgot'`
+- Estado `info` para mensagem de sucesso (verde)
+- `handleSubmit`: branch `forgot` chama `resetPasswordForEmail` com `redirectTo: ${origin}/reset-password`; em sucesso, exibe `info` "Enviamos um link de recuperação..."
+- No modo `forgot`: esconder campo senha/nome, esconder botão Google e divisor, mudar label do submit para "Enviar link de recuperação"
+- Abaixo do campo senha (modo `login`), link discreto "Esqueci minha senha" → `setMode('forgot')`
+- No header do modo `forgot`, link "← Voltar" para `setMode('login')`
 
-1. **`src/pages/Index.tsx`** (linhas 60-62)
-   - Trocar o circle+span por `<img src={logoWhite} alt="O2 Inc" className="h-7 w-auto" />`
-   - Importar `logoWhite from "@/assets/o2-logo-white.png"`
+**2. `src/pages/ResetPasswordPage.tsx`** (novo):
+- Página pública (sem `ProtectedRoute`)
+- `useEffect`: `supabase.auth.onAuthStateChange` escuta `PASSWORD_RECOVERY`/`SIGNED_IN` → marca `hasRecoverySession=true`. Também checa `getSession()` no mount.
+- Form com nova senha + confirmação (≥6 chars, devem coincidir)
+- Submit: `supabase.auth.updateUser({ password })` → mostra sucesso → redireciona `/app` em 1.5s
+- Aviso amarelo se aberto sem sessão de recovery
+- Visual coerente com LoginPage (lp-bg, GlassCard, logo O2)
 
-2. **`src/pages/Questionnaire.tsx`** (linhas 230-232)
-   - Mesma substituição (`h-6 w-auto` para caber no header mais compacto)
-   - Importar `logoWhite`
+**3. `src/App.tsx`** — registrar rota pública:
+```tsx
+import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
+<Route path="/reset-password" element={<ResetPasswordPage />} />
+```
 
-3. **`src/pages/Results.tsx`** (linhas 344-346)
-   - Mesma substituição (`h-7 w-auto`)
-   - Importar `logoWhite`
-
-4. **`src/pages/PresentationMode.tsx`** (linhas 375-377)
-   - Mesma substituição (`h-6 w-auto`)
-   - Importar `logoWhite`
-
-### Verificação adicional
-Rodar `rg "font-black text-\[10px\]\">O2"` e `rg "from-\[#7EBF8E\] to-\[#4CAF50\]"` após para garantir que nenhuma instância da logo placeholder ficou no código.
-
-### Fora de escopo
-- Não vou tocar no avatar circular numerado das perguntas/sub-áreas (linhas 196, 570, 654 etc.) — esses são **badges de número**, não logo da marca.
-- Não vou refatorar tipografia/cores hardcoded das páginas internas neste passo (pode ser próximo passo se quiser unificar com tokens O2).
+### Observações técnicas
+- Usa templates de e-mail padrão do Lovable Auth — não precisa configurar custom domain nem scaffold de auth-email-hook. Funcional out-of-the-box.
+- Não toca em `AuthContext` — `onAuthStateChange` global já vai logar o usuário ao processar o token de recovery, mas a `ResetPasswordPage` sobrescreve o `Navigate` porque é rota pública e o user permanece nela até atualizar a senha.
+- `redirectTo` aponta para `window.location.origin` (funciona tanto em preview quanto em produção `graudematuridade.lovable.app`).
